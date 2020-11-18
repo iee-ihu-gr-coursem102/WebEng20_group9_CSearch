@@ -266,6 +266,47 @@ and open the template in the editor.
 
 
 
+        <!-- SignUp Modal - START/SIGNUP -->
+        <div class="modal fade" id="my_modal" tabindex="-1" role="dialog" 
+             aria-labelledby="modal_label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom-0">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-title text-center">
+                            <h4 id="modal_title"></h4>
+                        </div>
+                        <div class="d-flex flex-column text-center">
+                            <form id="my_form">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" autocomplete="on"
+                                           id="email"placeholder="Your email address...">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" autocomplete="on"
+                                           id="password" placeholder="Your password...">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" 
+                                           id="confirm_password" placeholder="Your password...">
+                                </div>
+                                <button type="button" class="btn btn-info btn-block btn-round" 
+                                        id="modal_button"></button>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- SignUp Modal - END -->
 
 <!--        <script src="jquery/jquery-3.4.1/jquery-3.4.1.slim.min.js"></script>-->
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -286,10 +327,53 @@ and open the template in the editor.
 
         </script>
 
-  
+        <main id="main">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="img/slide_1.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>First slide label</h5>
+                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/slide_2.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Second slide label</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/slide_3.jpg" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Third slide label</h5>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </main>
 
 
-   
+        <footer class="py-5 bg-dark">
+            <div class="container">
+                <p class="m-0 text-center text-white">Contact us</p>
+            </div>
+        </footer>
 
     </body>
 </html>
