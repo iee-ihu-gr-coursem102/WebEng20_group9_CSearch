@@ -76,9 +76,8 @@ and open the template in the editor.
 
                 }
 
-                /* Γεγονότα που πυροδοτούνται όταν κάνω κλικ σε κάποιο αντικείμενο'*/
+                /* jQuery: on.click() events'*/
                 jQuery(function ($) {
-//
                     $('#exit_button').on('click', function () {
                         post_data("email", "password", 'login/logout.php')
 
@@ -107,12 +106,10 @@ and open the template in the editor.
 
 
                     $('#modal_button').on('click', function () {
-                        email = $('#email').val()
-                        password = $('#password').val()
-                        confirm_password = $('#confirm_password').val()
                         
-                        /**/
-
+                       
+                        /*Form Data Error Handling*/
+			    
                         email = $('#email').val()
                         password = $('#password').val()
                         confirm_password = $('#confirm_password').val()
@@ -312,16 +309,17 @@ and open the template in the editor.
                             <form id="my_form">
                                 <div class="form-group">
                                     <input type="email" class="form-control" autocomplete="on"
-                                           id="email"placeholder="Your email address...">
+                                           id="email"placeholder="Διεύθυνση email...">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" autocomplete="on"
-                                           id="password" placeholder="Your password...">
+                                           id="password" placeholder="Κωδικός...">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" 
-                                           id="confirm_password" placeholder="Your password...">
+                                           id="confirm_password" placeholder="Επιβεβαίωση κωδικού...">
                                 </div>
+				     <span id="status"></span>
                                 <button type="button" class="btn btn-info btn-block btn-round" 
                                         id="modal_button"></button>
 
