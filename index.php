@@ -110,16 +110,27 @@ and open the template in the editor.
                         email = $('#email').val()
                         password = $('#password').val()
                         confirm_password = $('#confirm_password').val()
+                        
+                        /**/
 
-                        $('#email').val("")
-                        $('#password').val("")
-                        $('#confirm_password').val("")
-//                        console.log("email=" + email + " password=" + password + " confirm_password=" + confirm_password)
-
-                        /*Εδώ πρέπει να γίνει διαχείριση των δεδομένων που διαβάστηκαν (πχ είναι κενά ή τα password 
-                         δεν είναι ίδια και αν όλα είναι καλά η μεταβλητή check να πάρει την τιμή true*/
-
-                        check = true;
+                        email = $('#email').val()
+                        password = $('#password').val()
+                        confirm_password = $('#confirm_password').val()
+						var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+				
+						if(email == "" || password == "" || confirm_password == ""){
+						    document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
+						}
+						else if(password !=confirm_password ){
+							document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
+							}
+						else if(!email.match(emailformat)){
+							document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
+							}
+						else {
+							check =true
+							}
+                        
                         if (check) {
 
                             $('#my_modal').modal('hide');
