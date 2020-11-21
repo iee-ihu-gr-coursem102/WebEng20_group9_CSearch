@@ -18,7 +18,7 @@ if (session_status() == 2 && count($_SESSION) == 0) {
 
 
 //Προσθέτω μερικές βιβλιοθήκες
-include( $_SESSION['base_path'] . "/useful/functions.php");
+include_once ( $_SESSION['base_path'] . "/functions/php/functions.php");
 // Αντιγράφω τις POST values στον πίνακα SESSION αφού αφαιρέσω τυχόν κενούς χαρακτήρες που προστέθηκαν κατά λάθος κατά την πληκτρολόγηση
 //Αν είναι ήδη συνδεδεμένος τότε δεν του επιτρέπω να συνεχίσει
 if (isset($_SESSION['is_logged_in'])) {
@@ -83,9 +83,7 @@ function send_mail($password, $mail_address) {
 
 
 
-    //Set the hostname of the mail server
-    
-
+    //Set the hostname of the mail server  
     $mail->Host = $_SESSION['smtp'];
     $mail->Port = $_SESSION['port'];
 

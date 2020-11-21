@@ -1,0 +1,11 @@
+{
+    "server": "localhost",
+    "db": "mydatabase",
+    "username": "myusername",
+    "password": "mypassword",
+    "sender": "mysender",
+    "smtp":"mysmptp",
+    "port":0,
+    "api_key": "myapikey"
+    
+}

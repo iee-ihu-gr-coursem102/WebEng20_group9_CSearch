@@ -1,7 +1,7 @@
 <?php
 
-session_start();
-error_reporting(E_ALL);
+//session_start();
+//error_reporting(E_ALL);
 
 $main_page = $_SESSION['root_url'];
 /* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
@@ -9,108 +9,180 @@ if (session_status() == 2 && count($_SESSION) == 0) {
     header("location:$main_page");
 }
 
-include ($_SESSION ['base_path'] . "/useful/functions.php");
+include_once ($_SESSION ['base_path'] . "/functions/php/functions.php");
 
-/*Αν δεν υπάρχει το τότε ανακατευθύνω στην αρχική σελίδα*/
-if (!isset($_SESSION['api_key'])) {
-    $_SESSION = array();
-
-// If it's desired to kill the session, also delete the session cookie.
-// Note: This will destroy the session, and not just the session data!
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]
-        );
-    }
-
-// Finally, destroy the session.
-    session_destroy();
-    /*Ανακατευθύνεται στην αρχικη σελίδα*/
-    header('location:index.php');
-}
 
 $api_key = $_SESSION['api_key'];
 $page = 1;
-print_r($_SESSION);
+$per_page = 10;
 
-//Παίρνω το id της πόλης
-$city = "london";
-$city = "thessaloniki";
 $city = "athens";
-$url = 'https://api.songkick.com/api/3.0/search/locations.json?query=' . $city . '&apikey=RmJpmyc8RlY74n1I';
-$data = file_get_contents($url);
-$obj = json_decode($data, true);
-$metroAreaId = $obj['resultsPage']['results']['location'][0]['metroArea']['id'];
-//echo $metroAreaId;
-//echo json_encode($data);
-$url = 'https://api.songkick.com/api/3.0/metro_areas/' . $metroAreaId
-        . '/calendar.json?' . 'apikey=' . $api_key . '&page=' . $page;
-//echo gettype($url)."<hr>";
+$city = "thessaloniki";
+$city = "london";
+$city = "athens";
+$city = "athens";
+
+//print_r($_SESSION);
+
+$city_id = get_city_id($city, $api_key);
+
+
+
+$url = 'https://api.songkick.com/api/3.0/metro_areas/' . $city_id . '/calendar.json?'
+        . 'apikey=' . $api_key
+        . '&page=' . $page
+        . '&per_page=' . $per_page;
+
 //echo "$url<hr>";
-//$url='https://api.songkick.com/api/3.0/metro_areas/28999/calendar.json?apikey=RmJpmyc8RlY74n1I';
 
 
 $json = file_get_contents($url);
 
-header('Content-type: text/javascript'); //για να εκτυπωθεί το json έτσι ώστε να γίνεται αντιληπτή η δομή του
-$json_data = json_decode($json, true, JSON_PRETTY_PRINT); //Json_data is array
 
-$status = $json_data["resultsPage"]["status"];
-echo "status: " . $json_data["resultsPage"]["status"];
-echo "<hr>\n";
-$number_of_events = count($json_data["resultsPage"]["results"]["event"]);
-echo "events:$number_of_events<hr>\n";
-$upcoming_event_id = $json_data["resultsPage"]["results"]["event"][0]["id"];
-echo "upcoming_event_id:$upcoming_event_id ";
-for ($i = 0; $i < $number_of_events; $i++) {
-    $upcoming_event_id = $json_data["resultsPage"]["results"]["event"][$i]["id"];
-    $display_name = $json_data["resultsPage"]["results"]["event"][$i]["displayName"];
-    $type = $json_data["resultsPage"]["results"]["event"][$i]["type"];
-    $status = $json_data["resultsPage"]["results"]["event"][$i]["status"];
-    $start_date = $json_data["resultsPage"]["results"]["event"][$i]["start"]["date"];
-    $start_time = $json_data["resultsPage"]["results"]["event"][$i]["start"]["time"];
-
-
-    $artist = $json_data["resultsPage"]["results"]["event"][$i]["performance"]["0"]["displayName"];
-    $no_of_artists = count($json_data["resultsPage"]["results"]["event"][$i]["performance"]);
-
-
-    echo "$i\t$upcoming_event_id";
-    echo "$i\t$display_name";
-    echo "$i\t $type";
-    echo "$i\t $status";
-    echo "$i\t $start_date";
-    echo "$i\t $start_time";
-    echo "$i\t $artist";
-    echo "$i\t $no_of_artists";
-    echo "\n";
-}
-//echo "upcoming_event_id: ". $json_data["resultsPage"]["results"]["event"][0]["id"];
-//echo "<hr>";
-//echo "<hr>";
-//echo "<hr>";
+/* για να εκτυπωθεί το json έτσι ώστε να γίνεται αντιληπτή η δομή του */
+//header('Content-type: text/javascript');
+$json_data = json_decode($json, true, JSON_PRETTY_PRINT);
 //print_r($json_data);
-//
-//
-//$ch = curl_init();
-//// IMPORTANT: the below line is a security risk, read https://paragonie.com/blog/2017/10/certainty-automated-cacert-pem-management-for-php-software
-//// in most cases, you should set it to true
-//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//curl_setopt($ch, CURLOPT_URL, $url);
-//$result = curl_exec($ch);
-//curl_close($ch);
-//
-//$obj = json_decode($result);
-//echo $obj->results['status'];
-echo "<hr>";
-
-print_r($json_data);
-//echo "xx: ". $json_data["status"];
 
 
-//$data = file_get_contents($url);
-//echo gettype($data);
-//echo json_encode($data);
-//echo $data;
-//echo json_decode($data);
+$number_of_events = count($json_data["resultsPage"]["results"]["event"]);
+$upcoming_event_id = $json_data["resultsPage"]["results"]["event"][0]["id"];
+
+/*
+ * *Θέλω να εμφανίσω τον καλλιτέχνη, το πότε, τον χώρο, το status, και τη δημοφιλία
+ * Καλλιτέχνης:
+ * Πότε:
+ * Χώρος:
+ * Κατάσταση:
+ * Δημοφιλία:
+ * 
+ * Πέρα από αυτά χρειάζομαι
+ * upcoming_event_id
+ * artist_uri
+ * venue_uri
+ * 
+ *  */
+
+$data = array();
+$data_columns = array('A/A', 'ARTIST', 'EVENT', 'PLACE', 'DATE', 'event', 'popularity');
+
+for ($i = 0; $i < $number_of_events; $i++) {
+
+    $row = array();
+    $upcoming_event_id = $json_data["resultsPage"]["results"]["event"][$i]["id"];
+    $event_name = $json_data["resultsPage"]["results"]["event"][$i]["displayName"];
+    $event_name = str_replace(" (CANCELLED)", "", $event_name);
+    $a=strrpos  ($event_name,"(",1);        
+    $event_name= trim(substr($event_name, 0, $a));
+    $event_uri = $json_data["resultsPage"]["results"]["event"][$i]["uri"];
+    $event_name = '<a href="' . $event_uri . '">' . $event_name . '</a>';
+
+//    echo $event_name;
+    $event_type = $json_data["resultsPage"]["results"]["event"][$i]["type"];
+    $event_status = $json_data["resultsPage"]["results"]["event"][$i]["status"];
+    $start_date = $json_data["resultsPage"]["results"]["event"][$i]["start"]["date"];
+
+    convert_date_format($start_date);
+//    echo $start_date;
+
+    $start_time = $json_data["resultsPage"]["results"]["event"][$i]["start"]["time"];
+    $start_time = substr($start_time, 0, -3);
+
+    $artist_id = $json_data["resultsPage"]["results"]["event"][$i]["performance"]["0"]["artist"]["id"];
+    $artist = $json_data["resultsPage"]["results"]["event"][$i] ["performance"]["0"]["artist"]["displayName"];
+    $artist_uri = $json_data["resultsPage"]["results"]["event"][$i] ["performance"]["0"]["artist"]["uri"];
+    $artist = '<a href="' . $artist_uri . '">' . $artist . '</a>';
+
+
+
+    $place = $json_data["resultsPage"]["results"]["event"][$i] ["venue"]["displayName"];
+    $place_uri = $json_data["resultsPage"]["results"]["event"][$i] ["venue"]["uri"];
+    $place = '<a href="' . $place_uri . '">' . $place . '</a>';
+
+
+    $event_popularity = $json_data["resultsPage"]["results"]["event"][$i]["popularity"];
+//    sprintf("%.2f%%", $x * 100)
+    $event_popularity = round((float) $event_popularity * 100, 3) . '%';
+    array_push($row, ($i + 1), $artist, $event_name, $place, $start_date, $event_status, $event_popularity);
+    array_push($data, $row);
+//    echo "<br>";
+}
+
+//print_r($data);
+$str = populate_table($data, $data_columns);
+echo $str;
+
+function populate_table($json_data, $data_columns) {
+//    $commited = $_SESSION['commited'];
+    /* creates Datatable content */
+    $str = "\n";
+    $str = $str . "<table id=\"example\" "
+            . "class=\"table table-striped table-bordered \" "
+            . "style=\"width:100%\">" . "\n";
+
+    $str = $str . "<thead>" . "\n";
+
+    $str = $str . "<tr>" . "\n";
+    $th = array("Προτίμηση", "Σχολική Μονάδα", "", "", "");
+    $th = array('A/A', 'ARTIST', 'EVENT', 'PLACE', 'DATE', 'STATUS', 'POPULARITY');
+
+    for ($i = 0; $i < count($th); $i++) {
+//        $str .= "<th id=\"$i\"  >$th[$i]</th>" . "\n";
+        $str .= "<th id=\"$i\" style=\"min-width:40px\" >$th[$i]</th>" . "\n";
+    }
+
+    $str .= "</tr>";
+    $str .= "</thead>" . "\n";
+    $str = $str . "<tbody id=\"datatable_body\" >" . "\n";
+
+
+    for ($i = 0; $i < count($json_data); $i++) {
+        $str = $str . "<tr id=\"row_" . $i . "\">" . "\n";
+
+        for ($k = 0; $k < count($data_columns); $k++) {
+            $str = $str . "<td  style=\"font-size: 0.9em;\">" .
+//                    $json_data[$i][$data_columns[$k]] . "</td>" . "\n";
+                    $json_data[$i][$k] . "</td>" . "\n";
+        }
+
+        /* Εάν δεν έχει κάνει commit τότε εμφανίζονται τα εικονίδια αλλιώς */
+//        if ($commited == 0) {
+//            /* Εικονίδιο διαγραφής σχολείου */
+//            $str = $str . ' <td style="text-align:center;">   '
+//                    . '    <img src="/teacher_services/images/remove_delete/Trash-icon_24.png"  '
+////                    . ' class="img-fluid"  '
+//                    . ' class="img-fluid"  '
+//                    . '  id="school_del' . ($i + 1) . '"'
+//                    . '  name="school_del' . ($i + 1) . '"'
+//                    . ' title="Διαγραφή"  '
+//                    . ' > </td>' . "\n";
+//
+//            /* Εικονίδιο Μετακινησης επάνω */
+//            $str = $str . ' <td style="text-align:center;">   '
+//                    . '    <img src="/teacher_services/images/move_up/arrow-circle-top-3x.webp"  '
+//                    . ' class="img-fluid"  '
+//                    . '  id="school_up' . ($i + 1) . '"'
+//                    . '  name="school_up' . ($i + 1) . '"'
+//                    . ' title="Μετακίνηση επάνω"  '
+//                    . ' > </td>' . "\n";
+//
+//            /* Εικονίδιο Μετακίνησης κάτω */
+//            $str = $str . ' <td style="text-align:center;">   '
+//                    . '    <img src="/teacher_services/images/move_down/arrow-circle-bottom-3x.webp"  '
+//                    . ' class="img-fluid"  '
+//                    . '  id="school_down' . ($i + 1) . '"'
+//                    . '  name="school_down' . ($i + 1) . '"'
+//                    . ' title="Μετακίνηση κάτω"  '
+//                    . ' > </td>' . "\n";
+//        } else {
+//            $str = $str . ' <td style="text-align:center;">    </td>' . "\n";
+//            $str = $str . ' <td style="text-align:center;">    </td>' . "\n";
+//            $str = $str . ' <td style="text-align:center;">    </td>' . "\n";
+//        }
+    }
+
+
+    $str .= "</tbody>" . "\n";
+    $str .= "</table>" . "\n";
+    return $str;
+}

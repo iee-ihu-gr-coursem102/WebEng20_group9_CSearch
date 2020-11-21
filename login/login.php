@@ -13,7 +13,7 @@ if (session_status() == 2 && count($_SESSION) == 0) {
 if (isset($_POST['email']) && isset($_POST['password'])) {
 //    $email = $_POST['email'];
 //    $password = $_POST['password'];
-    include ($_SESSION ['base_path'] . "/useful/functions.php");
+    include_once  ($_SESSION ['base_path'] . "/functions/php/functions.php");
 //    check_user_registration($email, $password);
     check_user_registration();
 }

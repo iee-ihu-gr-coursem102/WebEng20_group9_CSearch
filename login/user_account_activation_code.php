@@ -14,30 +14,28 @@ $path = __DIR__;
 $path = substr($path, 0, -5) . "config.json";
 
 
-
 $data = file_get_contents($path);
 $json_object = json_decode($data, true);
 
-$server = $json_object['server'];
-$db= $json_object['db'];
-$username = $json_object['username'];
-$password = $json_object['password'];
-$sender= $json_object['sender'];
-$port= $json_object['port'];
-$smtp= $json_object['smtp'];
+$_SESSION['server'] = $server = $json_object['server'];
+$_SESSION['db'] = $db = $json_object['db'];
+$_SESSION['username'] = $username = $json_object['username'];
+$_SESSION['password'] = $password = $json_object['password'];
+$sender = $json_object['sender'];
+$port = $json_object['port'];
+$smtp = $json_object['smtp'];
+
 
 
 if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
     $email = $_GET["a1"];
     $password = $_GET["a2"];
 
-    $path = substr(__DIR__, 0, -5);
-    $path = $path . "useful/functions.php";
-
-    include ($path);
-
+// 
     //Ελέγχω αν ο χρήστης είναι ήδη καταχωρημένος 
     try {
+        $functions = substr(__DIR__, 0, -5) . "functions/php/functions.php";
+        include_once ($functions);
         $cxn = get_connection();
         /* Εισάγω τον χρήστη στη βάση */
         $sql_query = "INSERT INTO `users`(`email`,  `Passwd`, `group_id`)"
@@ -45,18 +43,20 @@ if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
 //        echo $sql_query . "<br>";
 
         if ($cxn->query($sql_query)) {
-            send_verification_email($email,$sender);
+            send_verification_email($email, $sender,$smtp,$port);
         }
     } catch (Exception $exc) {
         echo $exc->getTraceAsString();
     } finally {
         mysqli_close($cxn);
-
         echo "<script>window.close();</script>";
     }
 }
 
-function send_verification_email($mail_address,$sender) {
+session_destroy();
+
+function send_verification_email($mail_address, $sender,$smtp,$port) {
+
     $path = substr(__DIR__, 0, -5);
     require $path . '/PHPMailer/src/Exception.php';
     require $path . '/PHPMailer/src/PHPMailer.php';
