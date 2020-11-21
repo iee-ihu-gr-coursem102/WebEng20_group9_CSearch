@@ -32,8 +32,9 @@
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" 
-                                   id="confirm_password" placeholder="Your password...">
+                                   id="confirm_password" placeholder="Confirm password...">
                         </div>
+                         <span id="status"></span>
                         <button type="button" class="btn btn-info btn-block btn-round" 
                                 id="modal_button"></button>
 
