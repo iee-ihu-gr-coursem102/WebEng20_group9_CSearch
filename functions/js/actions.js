@@ -46,23 +46,36 @@ jQuery(function ($) {
         password = $('#password').val()
         confirm_password = $('#confirm_password').val()
         var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        
-        //Χειρισμός Σφαλμάτων Δεδομένων
-				
-		if(email == "" || password == "" || confirm_password == ""){
-		   document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
-		  }
-		else if(password !=confirm_password ){
-		   document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
-		  }
-		else if(!email.match(emailformat)){
-		   document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
-		  }
-		else {
-		   check =true
-		     }
 
-       
+        //Χειρισμός Σφαλμάτων Δεδομένων
+
+        if (action == 'login') {
+            if (email == "" || password == "") {
+                document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
+            } else if (!email.match(emailformat)) {
+                document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
+            } else {
+                check = true
+            }
+
+
+        } else {
+            if (email == "" || password == "" || confirm_password == "") {
+                document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
+            } else if (password != confirm_password) {
+                document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
+            } else if (!email.match(emailformat)) {
+                document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
+            } else {
+                check = true
+            }
+
+
+        }
+
+
+
+
         if (check) {
 
             $('#my_modal').modal('hide');

@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 error_reporting(E_ALL);
 
@@ -26,6 +27,10 @@ $_SESSION['sender'] = $json_object['sender'];
 $_SESSION['smtp'] = $json_object['smtp'];
 $_SESSION['port'] = $json_object['port'];
 $_SESSION['api_key'] = $json_object['api_key'];
+
+if (!isset($_SESSION['login']) ) {
+    $_SESSION['login'] = 0;
+}
 
 
 header('location:home.php');

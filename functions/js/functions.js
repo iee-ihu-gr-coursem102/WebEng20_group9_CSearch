@@ -9,3 +9,10 @@ function during_login() {
     $('#login_button').hide();
 }
 
+function create_href(name, uri) {
+    if(uri==null) return name;
+    return '<a  href="'.concat(uri)
+            .concat('">')
+            .concat(name)
+            .concat('<\a>');
+}

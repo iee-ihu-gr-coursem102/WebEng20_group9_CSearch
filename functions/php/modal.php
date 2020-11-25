@@ -6,7 +6,6 @@
  */
 ?>
 
-<!-- SignUp Modal - START/SIGNUP -->
 <div class="modal fade" id="my_modal" tabindex="-1" role="dialog" 
      aria-labelledby="modal_label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -24,7 +23,7 @@
                     <form id="my_form">
                         <div class="form-group">
                             <input type="email" class="form-control" autocomplete="on"
-                                   id="email"placeholder="Your email address...">
+                                   id="email" placeholder="Your email address...">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" autocomplete="on"
@@ -47,4 +46,3 @@
         </div>
     </div>
 </div>
-<!-- SignUp Modal - END -->

@@ -3,11 +3,11 @@ session_start();
 error_reporting(E_ALL);
 
 
-if (!isset($_SESSION['login'])) {
-    $login = 0;
-} else if ($_SESSION['login'] == 1) {
-    $login = 1;
-}
+//if (!isset($_SESSION['login'])) {
+//    $login = 0;
+//} else if ($_SESSION['login'] == 1) {
+//    $login = 1;
+//}
 ?>
 <!DOCTYPE html>
 <!--
@@ -39,7 +39,7 @@ and open the template in the editor.
                 var check = false
                 var action = ""
 
-                var data = <?php echo json_encode($login); ?>;
+                var data = <?php echo json_encode($_SESSION['login']); ?>;
                 if (data == 0) {
                     before_login();
                 } else if (data == 1) {

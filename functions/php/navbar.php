@@ -26,7 +26,6 @@
                         <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <!--<a class="nav-link" href="2nd_page_just_php.php">Events <span class="sr-only">(current)</span></a>-->
                         <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
