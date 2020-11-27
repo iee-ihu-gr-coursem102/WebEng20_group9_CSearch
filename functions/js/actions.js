@@ -11,6 +11,12 @@ jQuery(function ($) {
     var confirm_password = ''
     var check = false
     var action = ""
+   
+  //Φόρμα: όροι χρησης εφαρμογής  
+    $("#terms").hide();
+	$("#show").click(function() {
+       $("#terms").slideToggle()();
+    });
 //
     $('#exit_button').on('click', function () {
         logout_handle();
@@ -66,7 +72,11 @@ jQuery(function ($) {
                 document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
             } else if (!email.match(emailformat)) {
                 document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
-            } else {
+            } 
+            else if($("#checkbox").prop('checked') != true ){
+			    document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποσεχτείτε τους όρους";
+            }
+            else {
                 check = true
             }
 
