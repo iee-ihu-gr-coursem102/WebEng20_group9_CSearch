@@ -12,11 +12,12 @@ if (session_status() == 2 && count($_SESSION) == 0) {
 include_once ($_SESSION ['base_path'] . "/functions/php/functions.php");
 $api_key = $_SESSION['api_key'];
 //$email = $_SESSION['email'];
-$page = 1;
-$per_page = 10;
-$city_id = 28999;
+//$page = 1;
+//$per_page = 10;
 
-
+$city_id = $_POST['city_id'];
+$per_page=$_POST['results_per_page'];
+$page=$_POST['page_number'];
 
 /* Παίρνω τα events για αυτήν την πόλη */
 $url = 'https://api.songkick.com/api/3.0/metro_areas/' . $city_id . '/calendar.json?'
@@ -25,7 +26,6 @@ $url = 'https://api.songkick.com/api/3.0/metro_areas/' . $city_id . '/calendar.j
         . '&per_page=' . $per_page;
 $json = file_get_contents($url);
 $json_data = json_decode($json, true, JSON_PRETTY_PRINT);
-
 
 
 /*Αρχικοποιώ μεταβλητές σε σχέση με τα δεδομένα που έλαβα*/
@@ -111,8 +111,15 @@ for ($i = 0; $i < $returned_events; $i++) {
 }
 
 /*Δημιουργώ το τελικό προς επιστροφή αντικείμενο*/
+//$events = array(
+//    "city_id" => $city_id,
+//    "returned_events" => $returned_events,
+//    "totalEntries" => $total_events,
+//    "page" => $event_page,
+//    "event_list" => $row);
+
+
 $events = array(
-    "city_id" => $city_id,
     "returned_events" => $returned_events,
     "totalEntries" => $total_events,
     "page" => $event_page,

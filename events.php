@@ -76,7 +76,7 @@ and open the template in the editor.
                 background-color: transparent;
                 text-decoration: underline;
             }
-            
+
         </style>
 
 
@@ -106,6 +106,7 @@ and open the template in the editor.
                 }
 
                 get_events_from_city_json(city_id, page_number, results_per_page);
+//                get_events_from_city_string_debug(city_id, page_number, results_per_page);
 
 
 
@@ -118,16 +119,17 @@ and open the template in the editor.
 //                        console.log (dataString)
 
                 $.ajax({
-
                     type: "POST",
                     dataType: "text",
-                    url: "get_results.php",
+                    url: "test.php",
                     data: dataString,
                     success: function (response) {
                         if (response === "TIMEOUT") {
                             alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
                         }
-                        create_table(response);
+//                        create_table(response);
+//                        console.log(typeof(response))
+                        console.log(response)
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert(xhr.status + " " + thrownError);
@@ -140,15 +142,12 @@ and open the template in the editor.
 
 
             function get_events_from_city_json(city_id, page_number, results_per_page) {
-//                    console.log("city_id=" + city_id)
-
-                var dataString = '&city_id=' + city_id;
-//                        console.log (dataString)
-
+                var dataString = {"city_id": city_id,
+                    "page_number": page_number,
+                    "results_per_page" : results_per_page};
+                
                 $.ajax({
-
                     type: "POST",
-                    contentType: "application/json",
                     dataType: "JSON",
                     url: "get_results.php",
                     data: dataString,
@@ -156,6 +155,7 @@ and open the template in the editor.
                         if (response === "TIMEOUT") {
                             alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
                         }
+//                        console.log(typeof (response))
                         create_table(response);
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -171,8 +171,8 @@ and open the template in the editor.
 
 
             function create_table(response) {
-                var city_id = response.city_id
-                var city_name = response.city_name
+//                var city_id = response.city_id
+//                var city_name = response.city_name
                 var total_events = response.totalEntries
                 var current_page = response.page
                 var returned_events = response.returned_events
@@ -210,11 +210,11 @@ and open the template in the editor.
 
                     /*Venue Data*/
                     var venue_name = '';
-                    console.log(event[i].event_uri)
+//                    console.log(event[i].event_uri)
                     if (event[i].event_uri == null) {
                         // some_variable is either null or undefined
                     }
-                    
+
                     if ($.trim(event[i].event_place) == "Unknown venue") {
                         var venue_name = '-'
                     } else {
