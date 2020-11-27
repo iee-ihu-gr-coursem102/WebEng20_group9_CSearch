@@ -31,6 +31,12 @@ jQuery(function ($) {
         $('#modal_title').text('Sign Up')
         $('#modal_button').text('Sign Up')
         action = 'signup'
+	
+// Εκκαθάριση πεδίων φόρμας signup
+	$('.form-control').val('')
+	$("#terms").hide();
+        $("#checkbox").prop("checked", false);
+	    
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
     });
 
@@ -41,6 +47,10 @@ jQuery(function ($) {
         $('#modal_button').text('Login')
         $('#confirm_password').hide()
         action = 'login'
+	    
+// Εκκαθάριση πεδίων φόρμας login
+	$('.form-control').val('')
+	 
 
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
     });
@@ -74,7 +84,7 @@ jQuery(function ($) {
                 document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
             } 
             else if($("#checkbox").prop('checked') != true ){
-			    document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποσεχτείτε τους όρους";
+			    document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποδεχτείτε τους όρους";
             }
             else {
                 check = true
