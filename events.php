@@ -1,14 +1,18 @@
 <?php
 session_start();
 error_reporting(E_ALL);
-//require $_SESSION['base_path'] . "/configuration.php";
-
+/* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
+if (session_status() == 2 && count($_SESSION) == 0) {
+    header("location:index.php");
+}
 
 $cities = array(
     0 => "thessaloniki",
     1 => "athens",
     2 => "london"
 );
+
+//    echo $_SESSION['login'];
 ?>
 <!DOCTYPE html>
 <!--
@@ -84,7 +88,8 @@ and open the template in the editor.
             /* thessaloniki id = 28999*/
             var city_id = 28999;
             var page_number = 1;
-            var results_per_page = 50;
+            var results_per_page = 10;
+            var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
 
             /* BEGIN OF DOCUMENT READY FUNCTION*/
 
@@ -96,179 +101,40 @@ and open the template in the editor.
                 var check = false
                 var action = ""
 
-                var data = <?php echo json_encode($_SESSION['login']); ?>;
-//                console.log(data)
-                if (data == 0) {
+
+                if (is_loged_in == 0) {
                     before_login()
-                } else if (data == 1) {
+                } else if (is_loged_in == 1) {
                     during_login()
 
                 }
 
-                get_events_from_city_json(city_id, page_number, results_per_page);
-//                get_events_from_city_string_debug(city_id, page_number, results_per_page);
 
+                get_events_from_city_json(city_id, page_number, results_per_page);
 
 
             });
-
-            function get_events_from_city_string_debug(city_id, page_number, results_per_page) {
-//                    console.log("city_id=" + city_id)
-
-                var dataString = '&city_id=' + city_id;
-//                        console.log (dataString)
-
-                $.ajax({
-                    type: "POST",
-                    dataType: "text",
-                    url: "test.php",
-                    data: dataString,
-                    success: function (response) {
-                        if (response === "TIMEOUT") {
-                            alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
-                        }
-//                        create_table(response);
-//                        console.log(typeof(response))
-                        console.log(response)
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status + " " + thrownError);
-                    }
-
-
-                });
-
-            }
-
-
-            function get_events_from_city_json(city_id, page_number, results_per_page) {
-                var dataString = {"city_id": city_id,
-                    "page_number": page_number,
-                    "results_per_page" : results_per_page};
-                
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "get_results.php",
-                    data: dataString,
-                    success: function (response) {
-                        if (response === "TIMEOUT") {
-                            alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
-                        }
-//                        console.log(typeof (response))
-                        create_table(response);
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status + " " + thrownError);
-                    }
-
-
-                });
-
-            }
-
-
-
-
-            function create_table(response) {
-//                var city_id = response.city_id
-//                var city_name = response.city_name
-                var total_events = response.totalEntries
-                var current_page = response.page
-                var returned_events = response.returned_events
-                var event = response.event_list
-
-                /* create table*/
-                var $table = $('<table>');
-//                $table.addClass("table table-striped table-bordered table-hover table-info table-responsive{-sm}");
-                $table.addClass("table table-striped table-bordered table-hover  ");
-
-                /*Προσθέτω Επικεφαλίδα και γραμμή τίτλων*/
-                var headings = ["#", "EVENT", "ARTIST",
-                    "PLACE", "DATE", "TIME", "STATUS", "TYPE", "POPULARITY"];
-
-                var a = ''
-                for (i = 0; i < headings.length; i++) {
-                    a = a.concat('<th scope="col class="text-center">'.concat(headings[i]).concat('</th>'))
-
-                }
-                $table.append(a)
-
-
-
-
-                /* create tbody*/
-                var $tbody = $table.append('<tbody/>').children('tbody');
-                for (i = 0; i < returned_events; i++) {
-//                    var row = $('<tr>');
-                    /*Event Data*/
-                    var event_id = event[i].event_id
-                    var event_name = create_href(event[i].event_name, event[i].event_uri)
-
-                    /*Artist Data*/
-                    var artist = create_href(event[i].artist, event[i].artist_uri);
-
-                    /*Venue Data*/
-                    var venue_name = '';
-//                    console.log(event[i].event_uri)
-                    if (event[i].event_uri == null) {
-                        // some_variable is either null or undefined
-                    }
-
-                    if ($.trim(event[i].event_place) == "Unknown venue") {
-                        var venue_name = '-'
-                    } else {
-                        var venue_name = create_href(event[i].event_place, event[i].event_uri);
-                    }
-
-
-                    var event_date = event[i].event_date
-                    var event_time = event[i].event_time
-                    if (event_time == false) {
-                        event_time = '-'
-                    }
-
-
-
-                    var event_status = event[i].event_status
-                    var event_type = event[i].event_type
-                    var event_popularity = event[i].event_popularity
-
-
-                    var row = '<tr/><th scope="row">'
-                            .concat((i + 1))
-                            .concat('</th><td>')
-                            .concat(event_name)
-                            .concat('</td><td>')
-                            .concat(artist)
-                            .concat('</td><td>')
-                            .concat(venue_name)
-                            .concat('</td><td>')
-                            .concat(event_date)
-                            .concat('</td><td>')
-                            .concat(event_time)
-                            .concat('</td><td>')
-                            .concat(event_status)
-                            .concat('</td><td>')
-                            .concat(event_type)
-                            .concat('</td><td>')
-                            .concat(event_popularity)
-                            .concat('</td></tr>')
-
-                    $tbody.append(row)
-
-
-                }
-                $table.appendTo('#my_table');
-//                $('#my_table').addClass("table table-striped table-bordered");
-
-
-            }
-
+            
+            
+      
+      
 
 
 
         </script>  
+        <script>
+
+//            function handle_like(id) {
+//                if ($("#" + id).attr('src') === 'img/accept/checked.png') {
+//                    $("#" + id).attr("src", "img/accept/to_check.png");
+//
+//                } else {
+//                    $("#" + id).attr("src", "img/accept/checked.png");
+//                }
+//
+//            }
+
+        </script>
     </head>
     <body>
         <?php include_once( $_SESSION['base_path'] . "/functions/php/navbar.php"); ?>

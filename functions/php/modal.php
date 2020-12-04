@@ -33,24 +33,29 @@
                             <input type="password" class="form-control" 
                                    id="confirm_password" placeholder="Confirm password...">
                         </div>
-                         <div>
-                             <a href="#" id="show")">Διαβάστε και αποδεχτείτε τους όρους της εφαρμογής </a>
-                             </div>
-                               <div id="terms" >
-                                <br>
-                                  <h3>Όροι χρήσης εγαρμογής</h3>
-                                  <p>1. Play nice here.</p>
-                                  <p>2. Brush your teeth before bed.</p>
-                                  <p>3. Brush your teeth before bed.</p>
-                                  <p><label>Αποδοχή Όρων</label>
-                                  <input type="checkbox" id="checkbox" ></p>
-                                </div>
-                         <br />
-                         <span id="status"></span>
-                        <button type="button" class="btn btn-info btn-block btn-round" 
+
+
+                        <div class="form-group" id="accept_div">
+                            <a href="terms.html" id="show" target="_blank">Διάβασα και αποδέχομαι τους όρους χρήσης</a>
+                            <p><label>Αποδοχή Όρων</label>
+                                <input type="checkbox" id="checkbox_accept" >
+                            </p> 
+                        </div>
+
+                        <span id="status"></span>
+                        <button type="button" class="btn btn-info btn-block btn-round"  
                                 id="modal_button"></button>
 
+                        <div class="form-group" id="forgot_password_div">    
+                            <br>
+                            <p id="forgot_password">Ξεχάσατε τον κωδικό?</p>
+                        </div> 
+
+
                     </form>
+
+
+
 
 
                 </div>

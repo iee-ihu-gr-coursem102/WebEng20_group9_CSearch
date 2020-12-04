@@ -11,13 +11,13 @@ jQuery(function ($) {
     var confirm_password = ''
     var check = false
     var action = ""
-   
-  //Φόρμα: όροι χρησης εφαρμογής  
+
+    //Φόρμα: όροι χρησης εφαρμογής  
     $("#terms").hide();
-	$("#show").click(function() {
-       $("#terms").slideToggle()();
+    $("#show").click(function () {
+        $("#terms").slideToggle()();
     });
-//
+
     $('#exit_button').on('click', function () {
         logout_handle();
 
@@ -26,37 +26,68 @@ jQuery(function ($) {
     });
 
 
+    /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο SignUp*/
     $('#sign_up_button').on('click', function () {
+        /* Εκκαθάριση πεδίων φόρμας modal*/
+        $('.form-control').val('')
+
+        /*Έλεγχος εμφάνισης πεδίων*/
+        $('#password').show()
         $('#confirm_password').show()
+        $("#accept_div").show()
+        $('#forgot_password_div').hide()
+        $("#terms").hide();
+
+        /*Ανάθεση τιμών στα πεδία*/
         $('#modal_title').text('Sign Up')
         $('#modal_button').text('Sign Up')
-        action = 'signup'
-	
-// Εκκαθάριση πεδίων φόρμας signup
-	$('.form-control').val('')
-	$("#terms").hide();
-        $("#checkbox").prop("checked", false);
-	    
+        $("#checkbox_accept").prop("checked", false);
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
+        action = 'signup'
     });
 
 
-
+    /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο Login*/
     $('#login_button').on('click', function () {
+        /* Εκκαθάριση πεδίων φόρμας modal*/
+        $('.form-control').val('')
+
+        /*Έλεγχος εμφάνισης πεδίων*/
+        $('#password').show()
+        $('#confirm_password').hide()
+        $('#forgot_password_div').show()
+        $("#accept_div").hide()
+
+        /*Ανάθεση τιμών στα πεδία*/
         $('#modal_title').text('Login')
         $('#modal_button').text('Login')
-        $('#confirm_password').hide()
-        action = 'login'
-	    
-// Εκκαθάριση πεδίων φόρμας login
-	$('.form-control').val('')
-	 
-
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
+        action = 'login'
+    });
+
+
+    /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο Ξέχασα τον κωδικό μου*/
+    $('#forgot_password').on('click', function () {
+        /* Εκκαθάριση πεδίων φόρμας modal*/
+        $('.form-control').val('')
+
+        /*Έλεγχος εμφάνισης πεδίων*/
+        $('#password').hide()
+        $('#confirm_password').hide()
+        $("#accept_div").hide()
+        $('#forgot_password_div').hide()
+
+        /*Ανάθεση τιμών στα πεδία*/
+        $('#modal_title').text('Change Password')
+        $('#modal_button').text('Change Password')
+        $('#confirm_password').hide()
+        action = 'change_password'
     });
 
 
 
+
+    /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο κουμπί του modal*/
     $('#modal_button').on('click', function () {
         email = $('#email').val()
         password = $('#password').val()
@@ -82,11 +113,9 @@ jQuery(function ($) {
                 document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
             } else if (!email.match(emailformat)) {
                 document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
-            } 
-            else if($("#checkbox").prop('checked') != true ){
-			    document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποδεχτείτε τους όρους";
-            }
-            else {
+            } else if ($("#checkbox_accept").prop('checked') != true) {
+                document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποδεχτείτε τους όρους";
+            } else {
                 check = true
             }
 
@@ -115,11 +144,9 @@ jQuery(function ($) {
 
 
     function post_data(email, password, my_url) {
-
         var dataString = '&email=' + email + '&password=' + password;
-//                        console.log (dataString)
-        $.ajax({
 
+        $.ajax({
             type: "POST",
             dataType: "text",
             url: my_url,
@@ -156,6 +183,7 @@ jQuery(function ($) {
             $('#exit_button').show();
             $('#login_button').hide();
             alert(return_message)
+            $(location).attr('href', 'index.php')
 
         } else {
             alert(return_message)
@@ -174,6 +202,13 @@ jQuery(function ($) {
         alert("Good Bye");
         window.location.href = "login/logout.php";
     }
+
+
+
+
+
+
+
 
 
 });

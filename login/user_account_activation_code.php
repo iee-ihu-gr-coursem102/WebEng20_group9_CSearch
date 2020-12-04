@@ -29,24 +29,46 @@ $smtp = $json_object['smtp'];
 
 if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
     $email = $_GET["a1"];
-    $password = $_GET["a2"];
+    $hash = $_GET["a2"];
 
 // 
-    //Ελέγχω αν ο χρήστης είναι ήδη καταχωρημένος 
     try {
+        $check = 0;
         $functions = substr(__DIR__, 0, -5) . "functions/php/functions.php";
         include_once ($functions);
         $cxn = get_connection();
-        /* Εισάγω τον χρήστη στη βάση */
-        $sql_query = "INSERT INTO `users`(`email`,  `Passwd`, `group_id`)"
-                . " VALUES ('$email',MD5('" . $password . "'),2);";
+        /* Αν ο χρήστης έχει κάνει προεγγραφή, τότε τον κάνω activate */
+        /* Begin Transaction */
+        $cxn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+        $sql_data = array();
+        $lines = array();
+        $sql_query = "SELECT COUNT(*) FROM `users` "
+                . " WHERE  `email`='$email' "
+                . "AND `hash`='$hash' AND `active`=0;";
 //        echo $sql_query . "<br>";
 
-        if ($cxn->query($sql_query)) {
-            send_verification_email($email, $sender,$smtp,$port);
+
+        get_data_from_query_NUM($cxn, $lines, $sql_query);
+//        print_r($lines);
+        $total_lines = $lines[0][0];
+//        echo $total_lines;
+        if ($lines[0][0] == 1) {
+            $sql_query = "UPDATE `users` SET `active`=1 WHERE `email`='$email';";
+            //        echo $sql_query . "<br>";
+
+            if ($cxn->query($sql_query)) {
+                $check = 1;
+            }
+        }
+        $cxn->commit();
+        if ($check == 1) {
+            send_verification_email($email, $sender, $smtp, $port);
         }
     } catch (Exception $exc) {
+        $cxn->rollback();
+
         echo $exc->getTraceAsString();
+//                mysqli_close($cxn);
     } finally {
         mysqli_close($cxn);
         echo "<script>window.close();</script>";
@@ -55,7 +77,7 @@ if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
 
 session_destroy();
 
-function send_verification_email($mail_address, $sender,$smtp,$port) {
+function send_verification_email($mail_address, $sender, $smtp, $port) {
 
     $path = substr(__DIR__, 0, -5);
     require $path . '/PHPMailer/src/Exception.php';

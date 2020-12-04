@@ -25,15 +25,17 @@ function check_user_registration() {
         $cxn = get_connection();
         $email = mysqli_real_escape_string($cxn, $_POST['email']);
         $password = mysqli_real_escape_string($cxn, $_POST['password']);
+         $MD5_password = md5($password);
+            $encrypted_password = hash('sha256', $MD5_password);
 
 //         $email = $_POST['email'];
 //    $password = $_POST['password'];
         $user_data = array();
 
-        /* Ελέγχουμε αν το user_name και το password ανταποκρίνονται σε χρήστη */
-        $sql_query = "SELECT count(*) as `how_many` "
+        /* Ελέγχουμε αν το user_name και το password ανταποκρίνονται σε χρήστη */           
+            $sql_query = "SELECT count(*) as `how_many` "
                 . " FROM `users`   "
-                . " WHERE `email`='$email' and  `Passwd`=MD5('" . $password . "') ;";
+                . " WHERE `email`='$email' and  `Passwd`='" . $encrypted_password . "' ;";
 //        echo $sql_query . "<br>";
         get_data_from_query_ASSOC($cxn, $user_data, $sql_query);
 //        print_r($user_data);

@@ -2,12 +2,17 @@
 session_start();
 error_reporting(E_ALL);
 
+/* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
+if (session_status() == 2 && count($_SESSION) == 0) {
+    header("location:index.php");
+}
+//print_r($_COOKIE);
+//echo "<hr>";
+//print_r($_SESSION);
+//echo "<hr>";
+//print_r($_ENV);
 
-//if (!isset($_SESSION['login'])) {
-//    $login = 0;
-//} else if ($_SESSION['login'] == 1) {
-//    $login = 1;
-//}
+
 ?>
 <!DOCTYPE html>
 <!--

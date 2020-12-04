@@ -66,20 +66,25 @@ for ($i = 0; $i < $returned_events; $i++) {
 
 
     $event_name = $json_data["resultsPage"]["results"]["event"][$i]["displayName"];
-    $event_name = str_replace(" (CANCELLED)", "", $event_name);
-    $a = strrpos($event_name, "(", 1);
-    $event_name = trim(substr($event_name, 0, $a));
+//    $event_name = str_replace(" (CANCELLED)", "", $event_name);
+    $event_name = mb_ereg_replace(" (CANCELLED)", "", $event_name);
+    
+//    $a = strrpos($event_name, "(", 1);
+    $a = mb_strrpos($event_name, "(", 1);
+//    $event_name = trim(substr($event_name, 0, $a));
+    $event_name = trim(mb_substr($event_name, 0, $a));
 
     $start_date = $json_data["resultsPage"]["results"]["event"][$i]["start"]["date"];
     convert_date_format($start_date);
     $start_time = $json_data["resultsPage"]["results"]["event"][$i]["start"]["time"];
-    $start_time = substr($start_time, 0, -3);
+//    $start_time = substr($start_time, 0, -3);
+    $start_time = mb_substr($start_time, 0, -3);
 
     $artist = $json_data["resultsPage"]["results"]["event"][$i] ["performance"]["0"]["artist"]["displayName"];
     $artist_uri = $json_data["resultsPage"]["results"]["event"][$i] ["performance"]["0"]["artist"]["uri"];
 
     $event_type = $json_data["resultsPage"]["results"]["event"][$i]["type"];
-    $event_status = strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]);
+    $event_status = mb_strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]);
 
     $event_popularity = $json_data["resultsPage"]["results"]["event"][$i]["popularity"];
     $event_popularity = round((float) $event_popularity * 100, 3) . '%';
@@ -102,7 +107,7 @@ for ($i = 0; $i < $returned_events; $i++) {
         "event_place" => $json_data["resultsPage"]["results"]["event"][$i] ["venue"]["displayName"],
         "event_uri" => $json_data["resultsPage"]["results"]["event"][$i] ["venue"]["uri"],
         "event_type" => $json_data["resultsPage"]["results"]["event"][$i]["type"],
-        "event_status" => strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]),
+        "event_status" => mb_strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]),
         "event_popularity" => $event_popularity,
         "favorite" => $favorite
             )

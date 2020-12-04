@@ -34,93 +34,126 @@ function check_user_existance() {
 
 
     try {
+
         $cxn = get_connection();
-        $user_data = array();
+        $cxn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+        $sql_data = array();
         $email = mysqli_real_escape_string($cxn, $_POST['email']);
         $password = mysqli_real_escape_string($cxn, $_POST['password']);
 
         /* Ελέγχουμε αν το user_name και το password ανταποκρίνονται σε χρήστη */
         $sql_query = "SELECT `email`"
                 . " FROM `users`   a"
-                . " WHERE a.`email`='$email';";
+                . " WHERE a.`email`='$email' ;";
 //        echo $sql_query . "<br>";
-        get_data_from_query_ASSOC($cxn, $user_data, $sql_query);
-//        print_r($user_data);
+        get_data_from_query_ASSOC($cxn, $sql_data, $sql_query);
+//        print_r($sql_data);
 
-        mysqli_close($cxn);
         /* Αν υπάρχει ο χρήστης πρέπει επιστρέψει πίσω κωδικό λάθους */
-        if (count($user_data) > 0) {
+        if (count($sql_data) > 0) {
             echo "This email exist";
         } else {
-            /* Θα πρέπει να στείλω μήνυμα στο email του για να κάνει αποδεκτό το αίτημα δημιουργίας λογαριασμού */
+            /* Καταχωρώ τον χρήστη στη βάση σαν ανενεργό */
+            $MD5_password = md5($password);
+            $encrypted_password = hash('sha256', $MD5_password);
+            $hash = md5(rand(0, 1000));
 
-            send_mail($password, $email);
+
+            /* Εισάγω τον χρήστη στη βάση σαν μη ενεργό */
+            $sql_query = "INSERT INTO `users`(`email`, `Passwd`, `hash`)VALUES ('$email', '$encrypted_password','$hash');";
+            $sql_query = "INSERT INTO `users`(`email`, `Passwd`, `hash`)VALUES (?,?,?);";
+            $statement = $cxn->prepare($sql_query);
+            $statement->bind_param('sss',$email, $encrypted_password, $hash);
+//            echo $sql_query . "<br>";
+
+            if ($statement->execute()) {
+                send_email($email, $hash);
+            } else {
+               
+                echo "There was an error";
+//                die('Error : (' . $mysqli->errno . ') ' . $mysqli->error);
+            }
+            $statement->close();
+
         }
+
+        $cxn->commit();
+
+        mysqli_close($cxn);
+
+//        send_mail($password, $email);
     } catch (Exception $exc) {
-        echo $exc->getTraceAsString();
+        $cxn->rollback();
+        echo "Something wrong happened. Transaction did not completed. Please try again";
+//        echo $exc->getTraceAsString();
     }
 }
 
-function send_mail($password, $mail_address) {
-    require $_SESSION['base_path'] . '/PHPMailer/src/Exception.php';
-    require $_SESSION['base_path'] . '/PHPMailer/src/PHPMailer.php';
-    require $_SESSION['base_path'] . '/PHPMailer/src/SMTP.php';
+function send_email($mail_address, $hash) {
+    try {
+        require $_SESSION['base_path'] . '/PHPMailer/src/Exception.php';
+        require $_SESSION['base_path'] . '/PHPMailer/src/PHPMailer.php';
+        require $_SESSION['base_path'] . '/PHPMailer/src/SMTP.php';
 
-    $link = "<a href='http://" .
-            $_SERVER['HTTP_HOST']
-            . '/' . $_SESSION['root_url']
-            . "/login/user_account_activation_code.php?a1=" . $mail_address
-            . "&a2=" . $password . "'>Create User Account</a>";
-
-
-
-    $mail = new PHPMailer(true);
-
-
-    $mail->IsSMTP();
-    $mail->CharSet = "UTF-8";
+        $link = "<a href='http://" .
+                $_SERVER['HTTP_HOST']
+                . '/' . $_SESSION['root_url']
+                . "/login/user_account_activation_code.php?a1=" . $mail_address
+                . "&a2=" . $hash . "'>Create User Account</a>";
 
 
 
-
-    //Set the hostname of the mail server  
-    $mail->Host = $_SESSION['smtp'];
-    $mail->Port = $_SESSION['port'];
-
-    //Enable SMTP debugging
-    // 0 = off (for production use)
-    // 1 = client messages
-    // 2 = client and server messages
-    $mail->SMTPDebug = 0;
+        $mail = new PHPMailer(true);
 
 
-    /* Αποστολέας */
+        $mail->IsSMTP();
+        $mail->CharSet = "UTF-8";
+
+
+
+
+        //Set the hostname of the mail server  
+        $mail->Host = $_SESSION['smtp'];
+        $mail->Port = $_SESSION['port'];
+
+        //Enable SMTP debugging
+        // 0 = off (for production use)
+        // 1 = client messages
+        // 2 = client and server messages
+        $mail->SMTPDebug = 0;
+
+
+        /* Αποστολέας */
 //    $sender = $_SESSION['sender'];
-    $mail->setFrom($_SESSION['sender'], 'CSearch - All about music events');
+        $mail->setFrom($_SESSION['sender'], 'CSearch - All about music events');
 
 
-    /* Παραλήπτης */
-    $mail->addAddress($mail_address, 'Dear Customer');
+        /* Παραλήπτης */
+        $mail->addAddress($mail_address, 'Dear Customer');
+        /* Θέμα μηνύματος */
+        $mail->Subject = 'Sign Up Request';
 
-    /* Θέμα μηνύματος */
-    $mail->Subject = 'Sign Up Request';
-
-    /* Σώμα μηνύματος */
-    $message = 'This message is autogenarate - Please dont answer<br><br>';
-    $message = 'We have a request for account creation<br>';
-    $message = $message . '<br>If you want to activate your account please follow the link.<br>';
-    $message = $message . '<br>' . $link;
-    $mail->IsHTML(true);
+        /* Σώμα μηνύματος */
+        $message = 'This message is autogenarate - Please dont answer<br><br>';
+        $message = 'We have a request for account creation<br>';
+        $message = $message . '<br>If you want to activate your account please follow the link.<br>';
+        $message = $message . '<br>' . $link;
+        $mail->IsHTML(true);
 
 
-    $mail->Body = $message;
+        $mail->Body = $message;
 
-    if ($mail->Send()) {
-        echo "Please check your email";
-    } else {
-//        $mail_address
+        if ($mail->Send()) {
+            echo "Please check your email";
+        } else {
 //        echo "Mail Error - >" . $mail->ErrorInfo;
-        echo "Mail  didnot send" ;
+            echo "Please try again";
+        }
+    } catch (Exception $exc) {
+
+//        echo $exc->getTraceAsString();
+        echo "Please try once more";
     }
 }
 
