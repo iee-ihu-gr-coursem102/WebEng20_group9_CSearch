@@ -54,31 +54,32 @@ and open the template in the editor.
                 text-align: center;
                 vertical-align: middle;
                 font-size: 90%;
+				padding: 15px;
             }
 
 
             a:link {
                 color: black;
                 /*background-color: transparent;*/
-                text-decoration: underline;
+                text-decoration: none;
             }
 
             a:visited {
-                color: gray;
+                color: black;
                 /*background-color: transparent;*/
-                text-decoration: underline;
+                text-decoration: none;
             }
 
             a:hover {
-                color: blue;
+                color: black;
                 background-color: transparent;
-                text-decoration: underline;
+                text-decoration: none;
             }
 
             a:active {
-                color: graytext;
+                color: black;
                 background-color: transparent;
-                text-decoration: underline;
+                text-decoration: none;
             }
 
         </style>
