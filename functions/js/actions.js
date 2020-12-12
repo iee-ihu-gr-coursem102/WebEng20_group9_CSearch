@@ -11,19 +11,94 @@ jQuery(function ($) {
     var confirm_password = ''
     var check = false
     var action = ""
+    var nav_pas = 0
+
+
+
+    window.onhashchange = function () {
+
+        var action = location.hash;
+
+        if (!(nav_pas == 1 && action == "#getevents")) {
+            navigator(action.substring(1))
+        }
+        nav_pas = 0
+    }
 
     //Φόρμα: όροι χρησης εφαρμογής  
+
     $("#terms").hide();
     $("#show").click(function () {
         $("#terms").slideToggle()();
     });
 
+
     $('#exit_button').on('click', function () {
         logout_handle();
-
 //        post_data("email", "password", 'login/logout.php')
 
     });
+
+
+    $('.nav-link').on('click', function () {
+        var link = $(this).prop('href')
+        var action = link.substring(link.lastIndexOf('#') + 1);
+        navigator(action);
+    });
+
+
+    function navigator(action) {
+        nav_pas = 1
+
+        if (location.hash.length == 0) {
+            action = "gotohome"
+        }
+
+        if (action == "about") {
+        }
+
+        switch (action) {
+            case "gotohome":
+                $("#carouselExampleCaptions").show()
+                $("#main_div").empty();
+
+
+                break;
+            case "about":
+                $("#carouselExampleCaptions").hide()
+                $("#main_div").empty();
+                $("#main_div").append("<p>About us</p>")
+
+                break;
+            case "getevents":
+                $("#carouselExampleCaptions").hide()
+                $("#my_table").empty();
+                $("#main_div").empty();
+
+
+                if (document.getElementById("my_table") == null) {
+                    $("#main_div").append('<div id="my_table"></div>');
+                    get_events_from_city_json(city_id, page_number, results_per_page);
+                }
+
+
+
+                break;
+
+
+            default:
+                console.log("what choise is that action:" + action);
+//                console.log("line 96 in navigator hash:" + location.hash + " size:" + location.hash.length)
+//                console.log("line 96 in navigator href:" + location.href)
+        }
+    }
+
+
+
+
+
+
+
 
 
     /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο SignUp*/
@@ -118,20 +193,19 @@ jQuery(function ($) {
             } else {
                 check = true
             }
-
-
         }
 
 
-
-
+        /*Ανάλογα με την ενέργεια που έχω επιλέξει (login/signup/Αλλαγή κωδικού εκτελεί την αντίστοιχη ενέργεια*/
         if (check) {
-
             $('#my_modal').modal('hide');
             if (action == 'login') {
                 post_data(email, password, 'login/login.php')
-            } else {
+            } else if (action == 'signup') {
                 post_data(email, password, 'login/signup.php')
+            } else if (action == 'change_password') {
+                console.log("change password")
+//                post_data(email, password, 'login/signup.php')
             }
 
         } else {
@@ -145,7 +219,7 @@ jQuery(function ($) {
 
     function post_data(email, password, my_url) {
         var dataString = '&email=' + email + '&password=' + password;
-
+console.log("line 222 my_url:"+my_url)
         $.ajax({
             type: "POST",
             dataType: "text",
@@ -153,7 +227,8 @@ jQuery(function ($) {
             data: dataString,
             success: function (response) {
                 if (response === "TIMEOUT") {
-                    alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
+                    $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
+                    $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
                 }
                 var return_message = $("<p/>").html(response).text().trim();
 //                                console.log("return_message:"+return_message)
@@ -165,7 +240,10 @@ jQuery(function ($) {
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + " " + thrownError);
+//                $('#alert_modal_modal').text(xhr.status + " " + thrownError);
+                $('#alert_modal_modal').text("ajax problem");
+                $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+
             }
 
 
@@ -174,19 +252,34 @@ jQuery(function ($) {
     }
 
 
+
+    /*Κλείνει το alert modal*/
+    $('#alert_modal_ok').on('click', function () {
+        $("#alert_modal").modal('hide');
+    });
+
+
+
     function login_handle(return_message) {
         if (return_message == 'This user does not exist') {
-            alert("This user does not exist")
+            $('#alert_modal_modal').text("This user does not exist");
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+
+
+
         } else if (return_message.substring(0, 5) == 'Hello') {
 
             $('#sign_up_button').hide();
             $('#exit_button').show();
             $('#login_button').hide();
-            alert(return_message)
+            $('#alert_modal_modal').text(return_message);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+
             $(location).attr('href', 'index.php')
 
         } else {
-            alert(return_message)
+            $('#alert_modal_modal').text(return_message);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
         }
 
     }
@@ -194,18 +287,17 @@ jQuery(function ($) {
 
 
     function signup_handle(message) {
-        alert(message);
+        $('#alert_modal_modal').text(message);
+        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
         console.log(message)
     }
 
     function logout_handle(return_message) {
-        alert("Good Bye");
+        $('#alert_modal_modal').text('Good Bye');
+        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+
         window.location.href = "login/logout.php";
     }
-
-
-
-
 
 
 

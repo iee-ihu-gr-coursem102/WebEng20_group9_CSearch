@@ -34,13 +34,15 @@ function get_events_from_city_json(city_id, page_number, results_per_page) {
         data: dataString,
         success: function (response) {
             if (response === "TIMEOUT") {
-                alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
+                $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
+                $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
             }
 //                        console.log(typeof (response))
             create_table(response);
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.status + " " + thrownError);
+            $('#alert_modal_modal').text(xhr.status + " " + thrownError);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
         }
 
 
@@ -58,11 +60,14 @@ function create_table(response) {
 
     /* create table*/
     var $table = $('<table></table>').addClass('table table-striped table-bordered table-hover');
+//        $('table').attr('id','events_table');
+
+//    $table.attr('id',"events_table")
     /*Προσθέτω Επικεφαλίδα και γραμμή τίτλων*/
     if (is_loged_in) {
-        var headings = ["#", "EVENT", "ARTIST", "PLACE", "DATE", "TIME",  "TYPE", "STATUS", "LIKE"];
+        var headings = ["#", "EVENT", "ARTIST", "PLACE", "DATE", "TIME", "TYPE", "STATUS", "LIKE"];
     } else {
-        var headings = ["#", "EVENT", "ARTIST", "PLACE", "DATE", "TIME",  "TYPE","STATUS"];
+        var headings = ["#", "EVENT", "ARTIST", "PLACE", "DATE", "TIME", "TYPE", "STATUS"];
     }
 
     var thead = $table.append('<thead/>').children('thead');
@@ -136,6 +141,7 @@ function create_table(response) {
 
     }
     $table.appendTo('#my_table');
+//    $("#my_table ").children().attr('id','events_table');
 }
 
 
@@ -163,7 +169,8 @@ function set_favorite(option, id) {
         data: '&action=' + option + '&id=' + id,
         success: function (response) {
             if (response === "TIMEOUT") {
-                alert("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά.");
+                $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
+                $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
             }
             var return_message = $("<p/>").html(response).text().trim();
             console.log("return_message:" + return_message)
@@ -174,8 +181,9 @@ function set_favorite(option, id) {
 //        }
 
         },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.status + " " + thrownError);
+        error: function (xhr, ajaxOptions, thrownError) { 
+            $('#alert_modal_modal').text(xhr.status + " " + thrownError);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
         }
 
 
