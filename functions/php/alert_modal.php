@@ -23,7 +23,7 @@
                 <button type="button" id="alert_modal_modal"  class="btn btn-info btn-block btn-round" ></button>
             </div>
             <!-- dialog buttons -->
-            <div class="modal-footer"><button type="button"  id="alert_modal_ok"class="btn btn-primary"  >CLOSE</button></div>
+            <div class="modal-footer"><button type="button"  id="alert_modal_ok" class="btn btn-primary">CLOSE</button></div>
             </div>
         </div>
     </div>

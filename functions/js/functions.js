@@ -32,13 +32,21 @@ function get_events_from_city_json(city_id, page_number, results_per_page) {
         dataType: "JSON",
         url: "get_results.php",
         data: dataString,
+        
+         beforeSend: function () {
+                $("div#divLoading").addClass('show');
+            },
+        
         success: function (response) {
+                            $("div#divLoading").removeClass('show');
+
             if (response === "TIMEOUT") {
                 $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
                 $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+            } else {
+                create_table(response);
             }
 //                        console.log(typeof (response))
-            create_table(response);
         },
         error: function (xhr, ajaxOptions, thrownError) {
             $('#alert_modal_modal').text(xhr.status + " " + thrownError);
@@ -52,17 +60,23 @@ function get_events_from_city_json(city_id, page_number, results_per_page) {
 
 
 function create_table(response) {
-
     var total_events = response.totalEntries
     var current_page = response.page
     var returned_events = response.returned_events
     var event = response.event_list
 
     /* create table*/
-    var $table = $('<table></table>').addClass('table table-striped table-bordered table-hover');
-//        $('table').attr('id','events_table');
+    var x = document.createElement("TABLE");
+    x.setAttribute("id", "datatable");
+//    $table.appendTo('#my_table');
+    document.getElementById("my_table").appendChild(x);
 
-//    $table.attr('id',"events_table")
+    var $table = $('#datatable')
+//    $table = $('#datatable').addClass('table table-striped table-bordered table-hover');
+    $table = $('#datatable').addClass('dataTable table-bordered table-hover');
+//    $table = $('#datatable').addClass('table  ');
+//    var $table = $('<table></table>').addClass('table table-striped table-bordered table-hover');
+
     /*Προσθέτω Επικεφαλίδα και γραμμή τίτλων*/
     if (is_loged_in) {
         var headings = ["#", "EVENT", "ARTIST", "PLACE", "DATE", "TIME", "TYPE", "STATUS", "LIKE"];
@@ -71,6 +85,8 @@ function create_table(response) {
     }
 
     var thead = $table.append('<thead/>').children('thead');
+//    thead.addClass('thead-dark ')
+    
     var row = $('<tr></tr>');
 //                for (var i = 0; i < headings.length; i++) {
     for (var i in headings) {
@@ -109,41 +125,105 @@ function create_table(response) {
             row.append($('<td></td>').text(event[i].event_time));
         }
 
-
-
         /*Type*/
         row.append($('<td></td>').text(event[i].event_type));
+
         /*Status*/
         row.append($('<td></td>').text(event[i].event_status));
-        /*Popularity*/
-//        row.append($('<td></td>').text(event[i].event_popularity));
+
         /*Event Data*/
         var event_id = event[i].event_id
 
         /*Check Favorite*/
         if (is_loged_in) {
-
-//                        console.log(i + ")" + event[i].favorite)
             if (event[i].favorite) {
                 row.append('<td><img  src=\"img/accept/checked.png\"  onclick=\"handle_like(' + event_id + ')\"  id="' + event_id + '"')
 
             } else {
                 row.append('<td><img  src=\"img/accept/to_check.png\"  onclick=\"handle_like(' + event_id + ')\"  id="' + event_id + '"')
-
             }
-
-
         }
-
-
         $tbody.append(row)
-
-
     }
-    $table.appendTo('#my_table');
-//    $("#my_table ").children().attr('id','events_table');
+
+
+    /*Προσθέτω τα εικονίδια περιήγησης στην επόμενη/προηγούμενη σελίδα*/
+    var total_pages = 1
+//    total_events = 29
+//    results_per_page = 10
+    var mod = total_events % results_per_page
+    if (mod != 0) {
+        total_pages = (total_events - mod) / results_per_page + 1
+
+
+    } else {
+        total_pages = total_events / results_per_page
+    }
+
+
+
+//    console.log(total_pages)
+//    total_events = 2001
+//    events_per_page = 10
+    var mod = total_events % results_per_page
+    if (mod != 0) {
+        total_pages = (total_events - mod) / 10 + 1
+    } else {
+        total_pages = total_events / 1
+    }
+
+
+
+
+
+    var tfoot = $table.append('<tfoot/>').children('tfoot');
+    row = $('<tr></tr>');
+    row.append($('<td></td>'));
+    row.append($('<td>page:' + current_page + '/' + total_pages + '</td>'));
+//    row.append($('<td>' + total_events + '</td>'));
+//    row.append($('<td>' + returned_events + '</td>'));
+//    row.append($('<td>' + results_per_page + '</td>'));
+
+
+//    for (i = 0; i < headings.length - 2; i++) {
+    for (i = 0; i < headings.length - 4; i++) {
+        row.append($('<td></td>'));
+    }
+
+    /*Προσθέτω το εικονίδιο previous_page*/
+    if (current_page > 1) {
+        row.append('<td><img  src=\"img/roll_data/back_enabled.png\"  onclick=\"change_page('
+                + (current_page - 1) + ')\"  id="previous_page"')
+    } else {
+        row.append($('<td></td>'));
+    }
+
+
+    /*Προσθέτω το εικονίδιο next_page*/
+    if (current_page < total_pages) {
+        row.append('<td><img  src=\"img/roll_data/forward_enabled.png\"  onclick=\"change_page('
+                + (current_page + 1) + ')\"  id="next_page"')
+    } else {
+        row.append($('<td></td>'));
+    }
+
+    $table.append(tfoot.append(row));
+
+
 }
 
+function change_page(next_page) {
+    console.log(next_page)
+    page_number = next_page
+    $("#main_div").empty();
+    $("#main_div").append('<div id="my_table"></div>');
+    if (waiting_results == 0) {
+        waiting_results = 1
+        get_events_from_city_json(city_id, page_number, results_per_page);
+        waiting_results = 0
+    }
+
+}
 
 /*Χειρίζεται τα favorites*/
 function handle_like(id) {
@@ -181,7 +261,7 @@ function set_favorite(option, id) {
 //        }
 
         },
-        error: function (xhr, ajaxOptions, thrownError) { 
+        error: function (xhr, ajaxOptions, thrownError) {
             $('#alert_modal_modal').text(xhr.status + " " + thrownError);
             $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
         }

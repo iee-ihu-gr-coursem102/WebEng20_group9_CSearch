@@ -31,16 +31,78 @@ and open the template in the editor.
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="bootstrap-4.5.3/js/bootstrap.min.js"></script>
 
+        <style type="text/css" class="init">
+            body {background-color: activecaption;}
+            body {background-color:scrollbar;}
+
+            .img-fluid {
+                max-width: 100%;
+                height: auto;
+            }
+
+            th {
+                text-align: center;
+                vertical-align: middle;
+                font-size: 95%;
+                padding: 15px;
+                color:whitesmoke;
+                background-color: black;
+
+            }
+
+            td{
+                text-align: center;
+                vertical-align: middle;
+                font-size: 90%;
+                padding: 15px;
+            }
+
+
+            a:link {
+                color: black;
+                /*background-color: transparent;*/
+                text-decoration: none;
+                text-decoration: underline;
+            }
+
+            a:visited {
+                color: black;
+                /*background-color: transparent;*/
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: black;
+                background-color: transparent;
+                text-decoration: none;
+            }
+
+            a:active {
+                color: black;
+                background-color: transparent;
+                text-decoration: none;
+            }
+
+            #datatable {
+                margin-left: auto;
+                margin-right: auto;
+
+            }
+      
+
+
+        </style>
+
 
 
         <script type="text/javascript">
             var city_id = 28999;
             var page_number = 1;
             var results_per_page = 10;
-
+            var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
+            var waiting_results = 0;
 
             /* BEGIN OF DOCUMENT READY FUNCTION*/
-            var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
             $(document).ready(function () {
 
                 var password = ""
@@ -49,7 +111,7 @@ and open the template in the editor.
                 var check = false
                 var action = ""
 
-//                var is_loged_in = <?php // echo json_encode($_SESSION['login']);   ?>;
+//                var is_loged_in = <?php // echo json_encode($_SESSION['login']);           ?>;
                 if (is_loged_in == 0) {
                     before_login();
                 } else if (is_loged_in == 1) {
@@ -69,13 +131,16 @@ and open the template in the editor.
 
         <?php include_once( $_SESSION['base_path'] . "/functions/php/navbar.php"); ?>
 
-        <div class="jumbotron text-center">         </div>
+        <div class="jumbotron  jumbotron-fluid text-center"></div>
 
-        <main id="main">
+
+
+        <div id="divLoading" class="container-fluid"></div>
+
+        <main id="main" class="container-fluid">
             <?php include_once( $_SESSION['base_path'] . "/functions/php/carousel.php"); ?>
 
-            <div id="main_div">                
-            </div>
+            <div id="main_div" class="container-fluid"></div>
 
         </main>
 
@@ -87,7 +152,9 @@ and open the template in the editor.
 
 
         <script src="functions/js/actions.js"></script>
-       
+        <link href="css/loading.css" rel="stylesheet">
+
+
 
     </body>
 </html>

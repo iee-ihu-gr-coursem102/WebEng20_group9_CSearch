@@ -11,26 +11,15 @@ jQuery(function ($) {
     var confirm_password = ''
     var check = false
     var action = ""
-    var nav_pas = 0
 
-
-
-    window.onhashchange = function () {
-
-        var action = location.hash;
-
-        if (!(nav_pas == 1 && action == "#getevents")) {
-            navigator(action.substring(1))
-        }
-        nav_pas = 0
-    }
 
     //Φόρμα: όροι χρησης εφαρμογής  
-
     $("#terms").hide();
     $("#show").click(function () {
         $("#terms").slideToggle()();
     });
+
+
 
 
     $('#exit_button').on('click', function () {
@@ -47,57 +36,36 @@ jQuery(function ($) {
     });
 
 
+    /*Για περιήγηση μεταξύ των επιλογών του Navbar*/
     function navigator(action) {
-        nav_pas = 1
-
-        if (location.hash.length == 0) {
-            action = "gotohome"
-        }
-
-        if (action == "about") {
-        }
-
+        console.log("line 53 action:" + action)
         switch (action) {
             case "gotohome":
                 $("#carouselExampleCaptions").show()
                 $("#main_div").empty();
-
-
                 break;
+
             case "about":
                 $("#carouselExampleCaptions").hide()
                 $("#main_div").empty();
                 $("#main_div").append("<p>About us</p>")
-
                 break;
+
             case "getevents":
                 $("#carouselExampleCaptions").hide()
                 $("#my_table").empty();
+                $("#my_table").remove();
                 $("#main_div").empty();
-
-
-                if (document.getElementById("my_table") == null) {
-                    $("#main_div").append('<div id="my_table"></div>');
-                    get_events_from_city_json(city_id, page_number, results_per_page);
-                }
-
-
+                $("#main_div").append('<div id="my_table"></div>');
+                get_events_from_city_json(city_id, page_number, results_per_page);
 
                 break;
 
-
             default:
                 console.log("what choise is that action:" + action);
-//                console.log("line 96 in navigator hash:" + location.hash + " size:" + location.hash.length)
-//                console.log("line 96 in navigator href:" + location.href)
         }
+
     }
-
-
-
-
-
-
 
 
 
@@ -122,6 +90,7 @@ jQuery(function ($) {
     });
 
 
+
     /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο Login*/
     $('#login_button').on('click', function () {
         /* Εκκαθάριση πεδίων φόρμας modal*/
@@ -139,6 +108,7 @@ jQuery(function ($) {
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
         action = 'login'
     });
+
 
 
     /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο Ξέχασα τον κωδικό μου*/
@@ -161,7 +131,6 @@ jQuery(function ($) {
 
 
 
-
     /*Ενέργειες που εκτελούνται όταν κάνω κλικ στο κουμπί του modal*/
     $('#modal_button').on('click', function () {
         email = $('#email').val()
@@ -169,25 +138,25 @@ jQuery(function ($) {
         confirm_password = $('#confirm_password').val()
         var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-        //Χειρισμός Σφαλμάτων Δεδομένων
 
+        /*Χειρισμός Σφαλμάτων Δεδομένων που καταχωρούνται στις φόρμες Login/SignUP*/
         if (action == 'login') {
             if (email == "" || password == "") {
                 document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
             } else if (!email.match(emailformat)) {
-                document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
+                document.getElementById("status").innerHTML = "Το mail δεν είναι αποδεκτό";
             } else {
                 check = true
             }
 
-
-        } else {
+        } else if (action == 'sign_up') {
             if (email == "" || password == "" || confirm_password == "") {
                 document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
             } else if (password != confirm_password) {
                 document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
             } else if (!email.match(emailformat)) {
-                document.getElementById("status").innerHTML = "Το mail δεν είναι σωστό";
+                console.log("xxxxxxxxxxxx")
+                document.getElementById("status").innerHTML = "Το mail δεν είναι αποδεκτό";
             } else if ($("#checkbox_accept").prop('checked') != true) {
                 document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποδεχτείτε τους όρους";
             } else {
@@ -207,19 +176,15 @@ jQuery(function ($) {
                 console.log("change password")
 //                post_data(email, password, 'login/signup.php')
             }
-
-        } else {
-            //Πρέπει να βγάλει error σε popup - το αφήνω να το προσπαθήσετε
-            a = 1
-            console.log(check)
         }
 
     });
 
 
+
     function post_data(email, password, my_url) {
         var dataString = '&email=' + email + '&password=' + password;
-console.log("line 222 my_url:"+my_url)
+        console.log("line 222 my_url:" + my_url)
         $.ajax({
             type: "POST",
             dataType: "text",
@@ -231,8 +196,8 @@ console.log("line 222 my_url:"+my_url)
                     $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
                 }
                 var return_message = $("<p/>").html(response).text().trim();
-//                                console.log("return_message:"+return_message)
                 if (my_url == 'login/login.php') {
+//                    var a=1
                     login_handle(return_message);
                 } else if (my_url == 'login/signup.php') {
                     signup_handle(return_message);
@@ -268,12 +233,9 @@ console.log("line 222 my_url:"+my_url)
 
 
         } else if (return_message.substring(0, 5) == 'Hello') {
-
             $('#sign_up_button').hide();
             $('#exit_button').show();
             $('#login_button').hide();
-            $('#alert_modal_modal').text(return_message);
-            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
 
             $(location).attr('href', 'index.php')
 
@@ -289,13 +251,9 @@ console.log("line 222 my_url:"+my_url)
     function signup_handle(message) {
         $('#alert_modal_modal').text(message);
         $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
-        console.log(message)
     }
 
     function logout_handle(return_message) {
-        $('#alert_modal_modal').text('Good Bye');
-        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
-
         window.location.href = "login/logout.php";
     }
 
