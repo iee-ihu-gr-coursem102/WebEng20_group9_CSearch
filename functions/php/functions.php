@@ -6,7 +6,14 @@
  * and open the template in the editor.
  */
 
-/** Συνάρτηση για να συνδεθεί με τη βάση με τη χρήση του λογαριασμού "simple_user" */
+
+
+
+/**
+ * Συνάρτηση για να συνδεθεί με τη βάση με τη χρήση του λογαριασμού "simple_user"
+ * @return type
+ * @throws Exception
+ */
 function get_connection() {
     $server = $_SESSION['server'];
     $db = $_SESSION['db'];
@@ -25,11 +32,20 @@ function get_connection() {
     return $cxn;
 }
 
-function get_data_from_query_ASSOC($link, &$data, $query) {
+
+
+/**
+ * Επιστροφή δεδομένων σαν Associative Array 
+ * @param type $cxn    
+ * @param type $data
+ * @param type $query
+ * @return type
+ */
+function get_data_from_query_ASSOC($cxn, &$data, $query) {
 //echo $query."<br>";
     try {
         /* Select queries return a resultset */
-        if ($result = $link->query($query)) {
+        if ($result = $cxn->query($query)) {
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 $data[] = $row;
             }
@@ -42,11 +58,19 @@ function get_data_from_query_ASSOC($link, &$data, $query) {
     return;
 }
 
-function get_data_from_query_NUM($link, &$data, $query) {
+
+/**
+ *  * Επιστροφή δεδομένων σαν Numeric Array 
+ * @param type $cxn
+ * @param type $data
+ * @param type $query
+ * @return type
+ */
+function get_data_from_query_NUM($cxn, &$data, $query) {
 //echo $query."<br>";
     try {
         /* Select queries return a resultset */
-        if ($result = $link->query($query)) {
+        if ($result = $cxn->query($query)) {
             while ($row = $result->fetch_array(MYSQLI_NUM)) {
                 $data[] = $row;
             }
@@ -59,22 +83,13 @@ function get_data_from_query_NUM($link, &$data, $query) {
     return;
 }
 
-function get_result($result, &$colNames, &$data) {
-    $i = 0;
-    while ($row = $result->fetch_assoc()) {
-        //get the column names into an array $colNames
-        if ($i == 0) {
-            foreach ($row as $colname => $val) {
-                $colNames[] = $colname;
-            }
-        }
-        //get raw data into array $data
-        $data[] = $row;
-        $i++;
-    }
-    return;
-}
 
+
+/**
+ * Αλλάζει τη μορφή ενός string date
+ * @param string $date
+ * @return type
+ */
 function convert_date_format(&$date) {
     $a = strpos($date, '-');
     $length = $a - 0;
@@ -91,7 +106,12 @@ function convert_date_format(&$date) {
 }
 
 
-
+/**
+ * Παίρνω το city_id 
+ * @param type $city
+ * @param type $api_key
+ * @return type
+ */
 function get_city_id($city, $api_key) {
     //Παίρνω το id της πόλης
     $url = 'https://api.songkick.com/api/3.0/search/locations.json?query=' . $city . '&apikey=' . $api_key;
@@ -102,51 +122,21 @@ function get_city_id($city, $api_key) {
 
 
 
-// Generates a strong password of N length containing at least one lower case letter,
-// one uppercase letter, one digit, and one special character. The remaining characters
-// in the password are chosen at random from those four sets.
-//
-// The available characters in each set are user friendly - there are no ambiguous
-// characters such as i, l, 1, o, 0, etc. This, coupled with the $add_dashes option,
-// makes it much easier for users to manually type or speak their passwords.
-//
-// Note: the $add_dashes option will increase the length of the password by
-// floor(sqrt(N)) characters.
-
-function generate_password($length = 9, $add_dashes = false, $available_sets = 'luds') {
-    $sets = array();
-    if (strpos($available_sets, 'l') !== false)
-        $sets[] = 'abcdefghjkmnpqrstuvwxyz';
-    if (strpos($available_sets, 'u') !== false)
-        $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
-    if (strpos($available_sets, 'd') !== false)
-        $sets[] = '1234567890';
-    if (strpos($available_sets, 's') !== false)
-        $sets[] = '!@#$%?';
-
-    $all = '';
-    $password = '';
-    foreach ($sets as $set) {
-        $password .= $set[array_rand(str_split($set))];
-        $all .= $set;
+/**
+ * Ελέγχει την ύπαρξη του χρήστη
+ * @param type $cxn
+ * @param type $email
+ * @return int
+ */
+function check_user_existance($cxn,  $email) {
+    $sql_data = array();
+    /* Ελέγχουμε αν το user_name ανταποκρίνεται σε χρήστη */
+    $sql_query = "SELECT `email` FROM `users` WHERE `email`='$email' AND `active`=1 ;";
+    get_data_from_query_ASSOC($cxn, $sql_data, $sql_query);
+    /* Αν δεν υπάρχει ο χρήστης πρέπει επιστρέψει πίσω κωδικό λάθους */
+    if (count($sql_data) == 0) {
+        return 0;
+    } else {
+        return 1;
     }
-
-    $all = str_split($all);
-    for ($i = 0; $i < $length - count($sets); $i++)
-        $password .= $all[array_rand($all)];
-
-    $password = str_shuffle($password);
-
-    if (!$add_dashes)
-        return $password;
-
-    $dash_len = floor(sqrt($length));
-    $dash_str = '';
-    while (strlen($password) > $dash_len) {
-        $dash_str .= substr($password, 0, $dash_len) . '-';
-        $password = substr($password, $dash_len);
-    }
-    $dash_str .= $password;
-    return $dash_str;
 }
-

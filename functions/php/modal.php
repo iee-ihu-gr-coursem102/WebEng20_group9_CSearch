@@ -44,13 +44,10 @@
                         <span id="status"></span>
                         <button type="button" class="btn btn-info btn-block btn-round"  
                                 id="modal_button"></button>
-
                         <div class="form-group" id="forgot_password_div">    
                             <br>
-                            <p id="forgot_password">Ξεχάσατε τον κωδικό?</p>
+                            <p id="forgot_password" style="text-decoration: underline">Ξεχάσατε τον κωδικό?</p>
                         </div> 
-
-
                     </form>
 
 

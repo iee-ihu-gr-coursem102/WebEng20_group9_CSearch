@@ -11,13 +11,15 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 /* Αρχικοποιώ μεταβλητές */
+
+
 $path = __DIR__;
-$root_path = substr(__DIR__, 0, -5);
+$root_path = substr(__DIR__, 0, -15);
+
 //echo $path."<br>";
 require $root_path . '/PHPMailer/src/Exception.php';
 require $root_path . '/PHPMailer/src/PHPMailer.php';
 require $root_path . '/PHPMailer/src/SMTP.php';
-//$path = substr($path, 0, -5) . "config.json";
 
 /* Διαβάζω το αρχείο με τις παραμέτρους */
 $data = file_get_contents($root_path . "config.json");
@@ -39,7 +41,7 @@ $_SESSION['port'] = $json_object['port'];
 if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
     try {
         $check = 0;
-        $functions = substr(__DIR__, 0, -5) . "functions/php/functions.php";
+        $functions = substr(__DIR__, 0, -15) . "functions/php/functions.php";
         include_once ($functions);
         $cxn = get_connection();
         /* Αρχίζω Transaction */
@@ -49,12 +51,13 @@ if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
         $email = mysqli_real_escape_string($cxn, $_GET["a1"]);
         $hash = mysqli_real_escape_string($cxn, $_GET["a2"]);
 
-        /* Ελέγχω αν ο χρήστης περιμένει να ενεργοποιηθεί */
-        $check = user_wants_to_sign_in($cxn, $email, $hash);
+        /* Ελέγχω αν ο χρήστης έχει ζητήσει αλλαγή - το temp_passwd δεν είναι κενό */
+        $check = user_wants_to_change_pass($cxn, $email, $hash);
+        
 
-        /* Αν περιμένει να ενεργοποιηθεί τον ενεργοποιώ */
-        if ($check == 1) {
-            $check = activate_user($cxn, $email);
+        /* Αν περιμένει να αλλαγή την εκτελώ */
+        if ($check > 0) {
+            $check = change_password($cxn, $email);
         }
 
         /* Επικυρώνω το Transaction */
@@ -64,9 +67,9 @@ if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
         if ($check == 1) {
             $mail = new PHPMailer(true);
             include_once '../functions/php/send_email.php';
-            $message = 'This message is autogenarated - Please dont answer<br><br> Your account has been activated';
+            $message = 'This message is autogenarated - Please dont answer<br><br> Your password has been changed';
             try {
-                send_email($email, $message, 'Account Activation', $mail);
+                send_email($email, $message, 'Password Changed', $mail);
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
@@ -90,16 +93,16 @@ session_destroy();
  * @param type $hash
  * @return array        
  */
-function user_wants_to_sign_in($cxn, $email, $hash) {
+function user_wants_to_change_pass($cxn, $email, $hash) {
     $sql_data = array();
     $lines = array();
-    $sql_query = "SELECT COUNT(*) FROM `users` "
-            . " WHERE  `email`='$email' "
-            . "AND `hash`='$hash' AND `active`=0;";
+    $sql_query = "SELECT LENGTH(`temp_passwd`) FROM `users` WHERE `email`='$email' AND `hash`='$hash' ;";
 //    echo $sql_query . "<br>";
     get_data_from_query_NUM($cxn, $lines, $sql_query);
-//        print_r($lines);
-    return $lines[0][0];
+    if (sizeof($lines) == 0) {
+        return 0;
+    } else
+        return $lines[0][0];
 }
 
 /**
@@ -108,11 +111,12 @@ function user_wants_to_sign_in($cxn, $email, $hash) {
  * @param type $email
  * @return type
  */
-function activate_user($cxn, $email) {
-    $sql_query = "UPDATE `users` SET `active`=1 WHERE `email`='$email';";
+function change_password($cxn, $email) {
+    /* Ενημερώνω το password kai διαγράφω το temp_password */
+    $sql_query = "UPDATE `users` SET `Passwd`=`temp_passwd`, `temp_passwd`='' WHERE `email`='$email';";
     //        echo $sql_query . "<br>";
     if ($cxn->query($sql_query)) {
-        return  1;
+        return 1;
     }
 }
 

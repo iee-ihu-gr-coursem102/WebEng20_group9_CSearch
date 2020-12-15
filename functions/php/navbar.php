@@ -32,9 +32,6 @@
                 <!--<a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>-->
                 <a class="nav-link" href="#gotohome">Home <span class="sr-only">(current)</span></a>
             </li>
-            <!--            <li class="nav-item active">
-                            <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
-                        </li>-->
             <li class="nav-item active">
                 <a class="nav-link" id="get_events_link"  href="#getevents">Events <span class="sr-only">(current)</span></a>
             </li>

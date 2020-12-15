@@ -32,13 +32,13 @@ function get_events_from_city_json(city_id, page_number, results_per_page) {
         dataType: "JSON",
         url: "get_results.php",
         data: dataString,
-        
-         beforeSend: function () {
-                $("div#divLoading").addClass('show');
-            },
-        
+
+        beforeSend: function () {
+            $("div#divLoading").addClass('show');
+        },
+
         success: function (response) {
-                            $("div#divLoading").removeClass('show');
+            $("div#divLoading").removeClass('show');
 
             if (response === "TIMEOUT") {
                 $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
@@ -86,7 +86,7 @@ function create_table(response) {
 
     var thead = $table.append('<thead/>').children('thead');
 //    thead.addClass('thead-dark ')
-    
+
     var row = $('<tr></tr>');
 //                for (var i = 0; i < headings.length; i++) {
     for (var i in headings) {
@@ -149,22 +149,15 @@ function create_table(response) {
 
     /*Προσθέτω τα εικονίδια περιήγησης στην επόμενη/προηγούμενη σελίδα*/
     var total_pages = 1
-//    total_events = 29
-//    results_per_page = 10
     var mod = total_events % results_per_page
     if (mod != 0) {
         total_pages = (total_events - mod) / results_per_page + 1
-
-
     } else {
         total_pages = total_events / results_per_page
     }
 
 
-
-//    console.log(total_pages)
-//    total_events = 2001
-//    events_per_page = 10
+    /*Υπολογίζω τον συνολικό αριθμό διαθέσιμων σελίδων*/
     var mod = total_events % results_per_page
     if (mod != 0) {
         total_pages = (total_events - mod) / 10 + 1
@@ -172,20 +165,13 @@ function create_table(response) {
         total_pages = total_events / 1
     }
 
-
-
-
-
+    /*Δημιουργεί το tfoot του πίνακα*/
     var tfoot = $table.append('<tfoot/>').children('tfoot');
     row = $('<tr></tr>');
     row.append($('<td></td>'));
     row.append($('<td>page:' + current_page + '/' + total_pages + '</td>'));
-//    row.append($('<td>' + total_events + '</td>'));
-//    row.append($('<td>' + returned_events + '</td>'));
-//    row.append($('<td>' + results_per_page + '</td>'));
 
-
-//    for (i = 0; i < headings.length - 2; i++) {
+    /*Κάποια κελιά είναι κενά*/
     for (i = 0; i < headings.length - 4; i++) {
         row.append($('<td></td>'));
     }
@@ -212,18 +198,15 @@ function create_table(response) {
 
 }
 
+
+/*Φέρνει την επόμενη/προηγούμενη σελίδα εκδηλώσεων */
 function change_page(next_page) {
-    console.log(next_page)
     page_number = next_page
     $("#main_div").empty();
     $("#main_div").append('<div id="my_table"></div>');
-    if (waiting_results == 0) {
-        waiting_results = 1
-        get_events_from_city_json(city_id, page_number, results_per_page);
-        waiting_results = 0
-    }
-
+    get_events_from_city_json(city_id, page_number, results_per_page);
 }
+
 
 /*Χειρίζεται τα favorites*/
 function handle_like(id) {
@@ -241,6 +224,9 @@ function handle_like(id) {
 
 }
 
+
+
+/* Καταχωρεί στη βάση μια εκδήλωση ως αγαπημένη ή το ανάστροφο */
 function set_favorite(option, id) {
     $.ajax({
         type: "POST",
@@ -254,12 +240,6 @@ function set_favorite(option, id) {
             }
             var return_message = $("<p/>").html(response).text().trim();
             console.log("return_message:" + return_message)
-//                if (my_url == 'login/login.php') {
-//        login_handle(return_message);
-//        } else if (my_url == 'login/signup.php') {
-//        signup_handle(return_message);
-//        }
-
         },
         error: function (xhr, ajaxOptions, thrownError) {
             $('#alert_modal_modal').text(xhr.status + " " + thrownError);

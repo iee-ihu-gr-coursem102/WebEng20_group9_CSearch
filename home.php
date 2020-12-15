@@ -96,11 +96,14 @@ and open the template in the editor.
 
 
         <script type="text/javascript">
-            var city_id = 28999;
+            var city_id = 28999;//thessaloniki
+            city_id=24426;//london
+            city_id=4120;//athens
             var page_number = 1;
             var results_per_page = 10;
             var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
-            var waiting_results = 0;
+                            var action = ""
+
 
             /* BEGIN OF DOCUMENT READY FUNCTION*/
             $(document).ready(function () {
@@ -109,18 +112,14 @@ and open the template in the editor.
                 var email = ""
                 var confirm_password = ''
                 var check = false
-                var action = ""
+//                var action = ""
 
-//                var is_loged_in = <?php // echo json_encode($_SESSION['login']);           ?>;
                 if (is_loged_in == 0) {
                     before_login();
                 } else if (is_loged_in == 1) {
                     during_login();
 
                 }
-
-                console.log("line 56 isloged:" + is_loged_in)
-
             });
 
 
@@ -153,7 +152,6 @@ and open the template in the editor.
 
         <script src="functions/js/actions.js"></script>
         <link href="css/loading.css" rel="stylesheet">
-
 
 
     </body>
