@@ -210,16 +210,16 @@ function change_page(next_page) {
 
 /*Χειρίζεται τα favorites*/
 function handle_like(id) {
-    if ($("#" + id).attr('src') === 'img/accept/checked.png') {
+    if ($("#" + id).attr('src') === 'img/accept/to_check.png') {
         /* Εισάγει στις προτιμήσεις τον κωδικό του event
          και αν η εισαγωγή είναι επιτυχημένη αλλάζει το εικονίδιο*/
         var a = set_favorite(1, id);
-        $("#" + id).attr("src", "img/accept/to_check.png");
+        $("#" + id).attr("src", "img/accept/checked.png");
     } else {
         /* Αφαιρεί από τις προτιμήσεις τον κωδικό του event
-         και αν η εισαγωγή είναι επιτυχημένη αλλάζει το εικονίδιο*/
+         και αν η αφαίρεση είναι επιτυχημένη αλλάζει το εικονίδιο*/
         var a = set_favorite(0, id);
-        $("#" + id).attr("src", "img/accept/checked.png");
+        $("#" + id).attr("src", "img/accept/to_check.png");
     }
 
 }
@@ -228,18 +228,23 @@ function handle_like(id) {
 
 /* Καταχωρεί στη βάση μια εκδήλωση ως αγαπημένη ή το ανάστροφο */
 function set_favorite(option, id) {
+    var dataString = '&option=' + option + '&id=' + id;
     $.ajax({
         type: "POST",
         dataType: "text",
         url: 'functions/php/set_favourite.php',
-        data: '&action=' + option + '&id=' + id,
+        data: dataString,
         success: function (response) {
             if (response === "TIMEOUT") {
                 $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
                 $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
             }
             var return_message = $("<p/>").html(response).text().trim();
-            console.log("return_message:" + return_message)
+//            console.log("return_message:" + return_message)
+            if (return_message==0){
+               $('#alert_modal_modal').text("Something Wrong Happened. Your Request Did not Succed. Please Refresh Page");
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});  
+            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             $('#alert_modal_modal').text(xhr.status + " " + thrownError);
