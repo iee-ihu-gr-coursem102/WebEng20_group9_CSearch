@@ -6,11 +6,7 @@ error_reporting(E_ALL);
 if (session_status() == 2 && count($_SESSION) == 0) {
     header("location:index.php");
 }
-//print_r($_COOKIE);
-//echo "<hr>";
-//print_r($_SESSION);
-//echo "<hr>";
-//print_r($_ENV);
+
 ?>
 <!DOCTYPE html>
 <!--
@@ -32,63 +28,8 @@ and open the template in the editor.
         <script src="bootstrap-4.5.3/js/bootstrap.min.js"></script>
 
         <style type="text/css" class="init">
-            body {background-color: activecaption;}
-            body {background-color:scrollbar;}
+            
 
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-            }
-
-            th {
-                text-align: center;
-                vertical-align: middle;
-                font-size: 95%;
-                padding: 15px;
-                color:whitesmoke;
-                background-color: black;
-
-            }
-
-            td{
-                text-align: center;
-                vertical-align: middle;
-                font-size: 90%;
-                padding: 15px;
-            }
-
-
-            a:link {
-                color: black;
-                /*background-color: transparent;*/
-                text-decoration: none;
-                text-decoration: underline;
-            }
-
-            a:visited {
-                color: black;
-                /*background-color: transparent;*/
-                text-decoration: none;
-            }
-
-            a:hover {
-                color: black;
-                background-color: transparent;
-                text-decoration: none;
-            }
-
-            a:active {
-                color: black;
-                background-color: transparent;
-                text-decoration: none;
-            }
-
-            #datatable {
-                margin-left: auto;
-                margin-right: auto;
-
-            }
-      
 
 
         </style>
@@ -96,13 +37,14 @@ and open the template in the editor.
 
 
         <script type="text/javascript">
+            city_id = 24426;//london
+            city_id = 4120;//athens
             var city_id = 28999;//thessaloniki
-            city_id=24426;//london
-            city_id=4120;//athens
+
             var page_number = 1;
             var results_per_page = 10;
             var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
-                            var action = ""
+            var action = ""
 
 
             /* BEGIN OF DOCUMENT READY FUNCTION*/
@@ -152,6 +94,7 @@ and open the template in the editor.
 
         <script src="functions/js/actions.js"></script>
         <link href="css/loading.css" rel="stylesheet">
+        <link href="css/my_css.css" rel="stylesheet">
 
 
     </body>

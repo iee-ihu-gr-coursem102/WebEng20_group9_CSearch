@@ -21,11 +21,12 @@
                 <div class="d-flex flex-column text-center">
                     <form id="my_form">
                         <div class="form-group">
-                            <input type="email" class="form-control" autocomplete="on"
+                            <input type="email" class="form-control" autocomplete="off"
                                    id="email" placeholder="Your email address...">
                         </div>
+
                         <div class="form-group">
-                            <input type="password" class="form-control" autocomplete="on"
+                            <input type="password" class="form-control" autocomplete="off"
                                    id="password" placeholder="Your password...">
                         </div>
                         <div class="form-group">
@@ -35,8 +36,8 @@
 
 
                         <div class="form-group" id="accept_div">
-                            <a href="terms.html" id="show" target="_blank">Διάβασα και αποδέχομαι τους όρους χρήσης</a>
-                            <p><label>Αποδοχή Όρων</label>
+                            <a href="terms.php" id="show" target="_blank">I have read and accept the terms of use</a>
+                            <p><label>Accept Terms</label>
                                 <input type="checkbox" id="checkbox_accept" >
                             </p> 
                         </div>
@@ -46,7 +47,7 @@
                                 id="modal_button"></button>
                         <div class="form-group" id="forgot_password_div">    
                             <br>
-                            <p id="forgot_password" style="text-decoration: underline">Ξεχάσατε τον κωδικό?</p>
+                            <p id="forgot_password" style="text-decoration: underline;">Forgot your Password?</p>
                         </div> 
                     </form>
 

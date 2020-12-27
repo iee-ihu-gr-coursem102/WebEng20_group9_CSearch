@@ -13,21 +13,18 @@ jQuery(function ($) {
 //    var action = ""
 
 
-    //Φόρμα: όροι χρησης εφαρμογής  
-    $("#terms").hide();
-    $("#show").click(function () {
-        $("#terms").slideToggle()();
-    });
 
-
-
-
+    /**
+     * Διαχειρίζεται την έξοδο από την εφαρμογή
+     */
     $('#exit_button').on('click', function () {
-        logout_handle();
-//        post_data("email", "password", 'login/logout.php')
-
+        window.location.href = "login/logout.php";
     });
 
+
+    /**
+     * Χειρίζεται το click στο nav-link
+     */
 
     $('.nav-link').on('click', function () {
         var link = $(this).prop('href')
@@ -36,7 +33,11 @@ jQuery(function ($) {
     });
 
 
-    /*Για περιήγηση μεταξύ των επιλογών του Navbar*/
+    /**
+     * Για περιήγηση μεταξύ των επιλογών του Navbar
+     * @param {type} action : Η επιλογή που κάναμε κλικ
+     * @returns {undefined}
+     */
     function navigator(action) {
         switch (action) {
             case "gotohome":
@@ -72,18 +73,18 @@ jQuery(function ($) {
      * για εγγραφή νέου χρήστη
      */
     $('#sign_up_button').on('click', function () {
-        /* Εκκαθάριση πεδίων φόρμας modal*/
-        $('.form-control').val('')
+        /* Αρχικοποίηση modal*/
+        initialize_modal();
+
         /*Έλεγχος εμφάνισης πεδίων*/
-        $('#password').show()
-        $('#confirm_password').show()
+        $('#confirm_password').show();
         $("#accept_div").show()
-        $('#forgot_password_div').hide()
-        $("#terms").hide();
 
         /*Ανάθεση τιμών στα πεδία*/
         $('#modal_title').text('Sign Up')
         $('#modal_button').text('Sign Up')
+        $("#password").attr("placeholder", "Set your password");
+
         $("#checkbox_accept").prop("checked", false);
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
         action = 'signup'
@@ -95,14 +96,9 @@ jQuery(function ($) {
      * Ενέργειες που εκτελούνται όταν κάνω κλικ στο Login
      * για εισαγωγή χρήστη στο σύστημα*/
     $('#login_button').on('click', function () {
-        /* Εκκαθάριση πεδίων φόρμας modal*/
-        $('.form-control').val('')
-
-        /*Έλεγχος εμφάνισης πεδίων*/
-        $('#password').show()
-        $('#confirm_password').hide()
+        /* Αρχικοποίηση modal*/
+        initialize_modal()
         $('#forgot_password_div').show()
-        $("#accept_div").hide()
 
         /*Ανάθεση τιμών στα πεδία*/
         $('#modal_title').text('Login')
@@ -117,7 +113,17 @@ jQuery(function ($) {
      * Όταν πατάω το ξέχασα τον κωδικό μου με ανακατευθύνει στο change_password/reset_pass.php
      * */
     $('#forgot_password').on('click', function () {
-        window.location.replace('change_password/reset_pass.php')
+        initialize_modal();
+
+        /*Ανάθεση τιμών στα πεδία του modal*/
+        $('#modal_title').text('Change Password');
+        $('#modal_button').text('Change Password');
+        $("#password").attr("placeholder", "Set your new password");
+        $('#confirm_password').show()
+        $('#my_modal').modal({backdrop: 'static', keyboard: false})
+        action = 'change_password';
+
+//        window.location.replace('change_password/reset_pass.php')
     });
 
 
@@ -134,23 +140,40 @@ jQuery(function ($) {
         /*Χειρισμός Σφαλμάτων Δεδομένων που καταχωρούνται στις φόρμες Login/Sign_UP*/
         if (action == 'login') {
             if (email == "" || password == "") {
-                document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
+                status_fill("Please fill in all the fields");
             } else if (!email.match(emailformat)) {
-                document.getElementById("status").innerHTML = "Το mail δεν είναι αποδεκτό";
+                status_fill("Email is not acceptable");
+
             } else {
                 check = true
             }
 
         } else if (action == 'signup') {
             if (email == "" || password == "" || confirm_password == "") {
-                document.getElementById("status").innerHTML = "Συμπληρώστε όλα τα πεδία της φόρμας";
+                status_fill("Please fill in all the fields");
             } else if (password != confirm_password) {
-                document.getElementById("status").innerHTML = "Τα πεδία κωδικού  πρόσβασης δεν ταιριάζουν";
+                status_fill("Passwords don't match")
+
+                $('#password').val('');
+                $('#confirm_password').val('');
             } else if (!email.match(emailformat)) {
-                document.getElementById("status").innerHTML = "Το mail δεν είναι αποδεκτό";
+                status_fill("Email is not acceptable");
+
             } else if ($("#checkbox_accept").prop('checked') != true) {
-                document.getElementById("status").innerHTML = "Παρακαλώ διαβάστε και αποδεχτείτε τους όρους";
-                $("#status").css('color', 'red');
+                status_fill("Please read and accept the terms of use");
+            } else {
+                check = true
+            }
+        } else if (action == 'change_password') {
+            if (email == "" || password == "" || confirm_password == "") {
+                status_fill("Please fill in all the fields");
+
+            } else if (password != confirm_password) {
+                status_fill("Passwords don't match")
+                $('#password').val('');
+                $('#confirm_password').val('');
+            } else if (!email.match(emailformat)) {
+                status_fill("Email is not acceptable")
             } else {
                 check = true
             }
@@ -164,6 +187,11 @@ jQuery(function ($) {
                 post_data(email, password, 'login/login.php')
             } else if (action == 'signup') {
                 post_data(email, password, 'login/signup.php')
+            } else if (action == 'change_password') {
+
+                post_data(email, password, 'change_password/send_message.php')
+//                post_user_data($('#email').val(), $('#password').val(), '../change_password/send_message.php')
+
             }
         }
 
@@ -171,6 +199,23 @@ jQuery(function ($) {
 
 
 
+    /**
+     * Εμφανίζει το πεδίο status με το προειδοποιητικό μήνυμα message
+     * @param {type} message
+     * @returns {undefined}
+     */
+    function status_fill(message) {
+        $("#status").text(message).css("color", "red").css("fontSize", "2rem");
+
+    }
+
+    /**
+     * Ajax κλήση για login ή signup
+     * @param {type} email
+     * @param {type} password
+     * @param {type} my_url: το αντίστοιχο script που θα τρέξει
+     * @returns {undefined}
+     */
     function post_data(email, password, my_url) {
         var dataString = '&email=' + email + '&password=' + password;
         $.ajax({
@@ -178,7 +223,11 @@ jQuery(function ($) {
             dataType: "text",
             url: my_url,
             data: dataString,
+               beforeSend: function () {
+            $("div#divLoading").addClass('show');
+        },
             success: function (response) {
+                 $("div#divLoading").removeClass('show');
                 if (response === "TIMEOUT") {
                     $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
                     $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
@@ -189,6 +238,8 @@ jQuery(function ($) {
                     login_handle(return_message);
                 } else if (my_url == 'login/signup.php') {
                     signup_handle(return_message);
+                } else if (my_url == 'change_password/send_message.php') {
+                    change_password_handle(return_message);
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -204,30 +255,48 @@ jQuery(function ($) {
     }
 
 
+    /**
+     * Αρχικοποιεί το modal
+     * @returns {undefined}
+     */
     function initialize_modal() {
         /* Αρχικοποιώ τις τιμές στο modal*/
+        $('#confirm_password').hide()
+        $('#accept_div').hide()
+        $('#forgot_password_div').hide()
+
+        $('.form-control').val('')
+        $("#modal_title").text("");
+        $("#modal_button").text("");
         $("#checkbox_accept").prop("checked", false);
         $('#password').val('')
         $('#confirm_password').val('')
         $('#forgot_password_div').val('')
+
         $('#status').text('')
         check = false;
 
     }
 
-    /*Κλείνει το alert modal*/
+
+
+    /**
+     * Κλείνει το alert modal
+     */
     $('#alert_modal_ok').on('click', function () {
         $("#alert_modal").modal('hide');
     });
 
 
-
+    /**
+     * Χειρίζεται το αποτέλεσμα της κλήσης login
+     * @param {type} return_message: το επιστρεφόμενο μήνυμα
+     * @returns {undefined}
+     */
     function login_handle(return_message) {
         if (return_message == 'This user does not exist') {
             $('#alert_modal_modal').text("This user does not exist");
             $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
-
-
 
         } else if (return_message.substring(0, 5) == 'Hello') {
             $('#sign_up_button').hide();
@@ -244,20 +313,25 @@ jQuery(function ($) {
     }
 
 
-
+    /**
+     * Χειρίζεται το αποτέλεσμα της κλήσης signup
+     * @param {type} message: το επιστρεφόμενο μήνυμα
+     * @returns {undefined}
+     */
     function signup_handle(message) {
         $('#alert_modal_modal').text(message);
         $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
     }
 
-    function logout_handle(return_message) {
-        window.location.href = "login/logout.php";
+
+
+    function                     change_password_handle(return_message) {
+        console.log(return_message)
+        $("#my_modal").hide()
+        $('#alert_modal_modal').text(return_message);
+        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
     }
 
 
 
-
-
 });
-
-
