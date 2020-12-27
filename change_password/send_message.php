@@ -97,11 +97,12 @@ function create_message($email, $hash) {
             $_SERVER['HTTP_HOST']
             . '/' . $_SESSION['root_url']
             . "/change_password/change_password_finallize.php?a1=" . $email
-            . "&a2=" . $hash . "'>Create User Account</a>";
+            . "&a2=" . $hash . "'>Change Password</a>";
 
     $message = 'This message is autogenarated - Please dont answer<br><br>';
     $message = 'We have a changing password request<br>';
     $message = $message . '<br>If you want to change your password please follow the link.<br>';
+    $message = $message . '<br>After that wait untill the confirmation message before you try to login<br>';
     $message = $message . '<br>' . $link;
     return $message;
 }
