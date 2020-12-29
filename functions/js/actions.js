@@ -48,7 +48,7 @@ jQuery(function ($) {
             case "about":
                 $("#carouselExampleCaptions").hide()
                 $("#main_div").empty();
-                $("#main_div").append("<p>Είμαστε μεταπτυχιακοί φοιτητές του Διεθνούς Πανεπιστημίου της Ελλάδος του τμήματος Μηχανικών Πληροφορικής και Ηλεκτρονικών Συστημάτων.</br>Στα πλαίσια της εργασίας, στο μάθημα <Μηχανική Λογισμικού για Διαδικτυακές Εφαρμογές>, δημιουργήσαμε αυτό τον ιστότοτοπο ο οποίος μας παρέχει πληροφρίες για μουσικές εκδηλώσεις που θα γίνονται σε ένα συγκεκριμένο μέρος.</p>")
+                $("#main_div").append("<p>We are postgraduate students of the International University of Greece, of the Department of Computer and Electronic Systems Engineering.</br>In the context of the work in the lesson 'Software Engineering for Web Applications', we created this site, which provides us with information about musical events that will take place in a specific place.</br></br></p>")
                 break;
 
             case "getevents":
