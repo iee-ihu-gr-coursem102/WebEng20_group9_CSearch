@@ -10,7 +10,7 @@
 		<div class="row">
 			<div class="col-md-4 page-footer-group">
 				<p class="page-footer-header header-3">Information</p>
-				<p>Αυτή η διαδικτυακή εφαρμογή αντλεί δεδομένα που παρέχονται από το <a href="https://www.songkick.com/developer">Songkick API</a></p>
+				<p>This web application draws on data provided by the <a href="https://www.songkick.com/developer">Songkick API</a></p>
 			</div>
 			<div class="col-md-4 page-footer-group">
 				<p class="page-footer-header header-3">Team Members</p>
