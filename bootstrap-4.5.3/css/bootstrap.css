@@ -6652,6 +6652,7 @@ a.close.disabled {
   margin-right: 15%;
   margin-left: 15%;
   list-style: none;
+  padding-bottom:20%
 }
 
 .carousel-indicators li {
@@ -6689,7 +6690,7 @@ a.close.disabled {
   left: 15%;
   z-index: 10;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 20%;
   color: #fff;
   text-align: center;
 }
