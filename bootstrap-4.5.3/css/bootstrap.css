@@ -50,6 +50,7 @@ html {
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
+  width: 100%;
 }
 
 body {
@@ -586,6 +587,14 @@ pre code {
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+}
+
+.page-footer-header {
+	color:#fff;
+}
+
+.header-3 {
+	font-size:22px;
 }
 
 .no-gutters {
@@ -1701,11 +1710,17 @@ pre code {
 
 .table-bordered {
   border: 1px solid #dee2e6;
+  width:100%;
 }
 
 .table-bordered th,
 .table-bordered td {
   border: 1px solid #dee2e6;
+}
+
+.table-bordered td a {
+	text-decoration: none;
+	color:#343a40;
 }
 
 .table-bordered thead th,
@@ -4344,7 +4359,7 @@ input[type="button"].btn-block {
 }
 
 .navbar {
-  position: fixed;
+  position: relative;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
@@ -4356,6 +4371,7 @@ input[type="button"].btn-block {
   width: 100%;
   z-index: 2;
   padding: 0.5rem 1rem;
+  -webkit-box-align: center;
 }
 
 .navbar .container,
@@ -8450,6 +8466,8 @@ button.bg-dark:focus {
 .pt-5,
 .py-5 {
   padding-top: 3rem !important;
+  width:100%;
+  display:flex;
 }
 
 .pr-5,
