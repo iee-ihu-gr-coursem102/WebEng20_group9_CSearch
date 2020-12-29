@@ -593,8 +593,27 @@ pre code {
 	color:#fff;
 }
 
+.page-footer-header .p {
+	font-size:12px;
+}
+
+.page-footer-menu.menu {
+	list-style:none;
+	font-size:12px;
+}
+
+a:link {
+	text-decoration:none;
+	color: #fff;
+}
+
+a:link:hover {
+	text-decoration:none;
+	color: #000;
+}
+
 .header-3 {
-	font-size:22px;
+	font-size:14px;
 }
 
 .no-gutters {
@@ -1127,6 +1146,8 @@ pre code {
     -ms-flex: 0 0 33.333333%;
     flex: 0 0 33.333333%;
     max-width: 33.333333%;
+	text-align: center;
+	color: #fff;
   }
   .col-md-5 {
     -ms-flex: 0 0 41.666667%;
@@ -5317,16 +5338,9 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .jumbotron {
-  padding: 2rem 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   background-color: #e9ecef;
   border-radius: 0.3rem;
-}
-
-@media (min-width: 576px) {
-  .jumbotron {
-    padding: 4rem 2rem;
-  }
 }
 
 .jumbotron-fluid {
@@ -8465,7 +8479,7 @@ button.bg-dark:focus {
 
 .pt-5,
 .py-5 {
-  padding-top: 3rem !important;
+  padding-top: 0.3rem !important;
   width:100%;
   display:flex;
 }
@@ -8473,11 +8487,6 @@ button.bg-dark:focus {
 .pr-5,
 .px-5 {
   padding-right: 3rem !important;
-}
-
-.pb-5,
-.py-5 {
-  padding-bottom: 3rem !important;
 }
 
 .pl-5,
