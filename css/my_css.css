@@ -33,7 +33,6 @@ a:link {
     color: black;
     /*background-color: transparent;*/
     text-decoration: none;
-    text-decoration: underline;
 }
 
 a:visited {
@@ -63,22 +62,23 @@ a:active {
 
 .my_footer a:link {
     color:white;
-    text-decoration: underline;
+    text-decoration: none;
     font-size: 1.1em;
 
 }
 
 .my_footer a:visited {
     color: buttonshadow;
-    text-decoration: underline;
+    text-decoration: none;
     font-size: 1.2em;
 }
 
 .my_footer a:hover {
     color: red;
     background-color: transparent;
-    text-decoration: underline;
-    font-size: 1.2em; 
+    text-decoration: none;
+    font-size: 1.1em;
+	font-weight: bold;
 }
 
 
