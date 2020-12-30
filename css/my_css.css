@@ -1,6 +1,6 @@
 #forgot_password:hover {
-      cursor: pointer;
-    
+    cursor: pointer;
+
 }
 
 body {background-color: activecaption;}
@@ -59,3 +59,26 @@ a:active {
     margin-right: auto;
 
 }
+
+
+.my_footer a:link {
+    color:white;
+    text-decoration: underline;
+    font-size: 1.1em;
+
+}
+
+.my_footer a:visited {
+    color: buttonshadow;
+    text-decoration: underline;
+    font-size: 1.2em;
+}
+
+.my_footer a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+    font-size: 1.2em; 
+}
+
+

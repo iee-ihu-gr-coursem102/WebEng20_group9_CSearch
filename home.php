@@ -42,7 +42,7 @@ and open the template in the editor.
             var city_id = 28999;//thessaloniki
 
             var page_number = 1;
-            var results_per_page = 10;
+            var results_per_page = 20;
             var is_loged_in = <?php echo json_encode($_SESSION['login']); ?>;
             var action = ""
 
@@ -72,7 +72,7 @@ and open the template in the editor.
 
         <?php include_once( $_SESSION['base_path'] . "/functions/php/navbar.php"); ?>
 
-        <div class="jumbotron  jumbotron-fluid text-center"></div>
+        <!--<div class="jumbotron  jumbotron-fluid text-center"></div>-->
 
 
 
