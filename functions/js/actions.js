@@ -10,8 +10,6 @@ jQuery(function ($) {
     var email = ""
     var confirm_password = ''
     var check = false
-//    var action = ""
-
 
 
     /**
@@ -46,9 +44,18 @@ jQuery(function ($) {
                 break;
 
             case "about":
-                $("#carouselExampleCaptions").hide()
-                $("#main_div").empty();
-                $("#main_div").append("<p>We are postgraduate students of the International University of Greece, of the Department of Computer and Electronic Systems Engineering.</br>In the context of the work in the lesson 'Software Engineering for Web Applications', we created this site, which provides us with information about musical events that will take place in a specific place.</br></br></p>")
+                $("#alert_modal_title").text('About Us')
+                var msg = "We are postgraduate students of the <br><b>International University of Greece</b>"
+                msg = msg + "<br> of the"
+                msg = msg + "<br><b>Department of Computer and Electronic Systems Engineering</b>"
+                msg = msg + "<br>In the context of the work in the lesson"
+                msg = msg + "<br><b>Software Engineering for Web Applications</b>"
+                msg = msg + "<br>we created this site, which provides us with information"
+                msg = msg + "<br>about musical events that will take place in"
+                msg = msg + "<br><b>Thessaloniki</b>"
+                $('#alert_modal_modal').text('');
+                $('#alert_modal_modal').html(msg);
+                $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
                 break;
 
             case "getevents":
@@ -223,11 +230,11 @@ jQuery(function ($) {
             dataType: "text",
             url: my_url,
             data: dataString,
-               beforeSend: function () {
-            $("div#divLoading").addClass('show');
-        },
+            beforeSend: function () {
+                $("div#divLoading").addClass('show');
+            },
             success: function (response) {
-                 $("div#divLoading").removeClass('show');
+                $("div#divLoading").removeClass('show');
                 if (response === "TIMEOUT") {
                     $('#alert_modal_modal').text("Το χρονικό όριο σύνδεσης έληξε. Παρακαλώ συνδεθείτε ξανά");
                     $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
@@ -284,6 +291,9 @@ jQuery(function ($) {
      * Κλείνει το alert modal
      */
     $('#alert_modal_ok').on('click', function () {
+        $('#alert_modal_modal').text('');
+        $("#alert_modal_title").text('Alert Message')
+        $('#alert_modal_modal').html("<p></p>");
         $("#alert_modal").modal('hide');
     });
 
@@ -325,7 +335,7 @@ jQuery(function ($) {
 
 
 
-    function                     change_password_handle(return_message) {
+    function  change_password_handle(return_message) {
         console.log(return_message)
         $("#my_modal").hide()
         $('#alert_modal_modal').text(return_message);

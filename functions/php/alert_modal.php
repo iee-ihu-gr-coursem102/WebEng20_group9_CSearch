@@ -9,14 +9,16 @@
 <div class="modal fade" id="alert_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header border-bottom-0">
+            <div class="modal-header border-bottom-0 btn-primary">
+                                    <h2 id="alert_modal_title">Alert Message</h2>
+
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-title text-center">
-                    <h4 id="alert_modal_title">Alert Message</h4>
+<!--                    <h4 id="alert_modal_title">Alert Message</h4>-->
                 </div>     
                 <!-- dialog body -->
             <div class="modal-body">
