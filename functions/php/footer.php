@@ -14,7 +14,12 @@
                 <ul class="page-footer-menu menu">
                     <li class="menu-item">
                         This web application draws on data provided by the
-                        <a href="https://www.songkick.com/developer" class="footer_link">Songkick API</a>
+                        
+                        <a href="https://www.songkick.com/developer" class="footer_link">
+                        <img src="img/by-songkick-black.png" class="img-fluid"
+                             style="max-width: 35%;height: auto;"
+                             alt="Responsive image">
+                        </a>
                     </li>                    					
                 </ul>
 
