@@ -47,7 +47,7 @@
                 <ul class="page-footer-menu menu">
                     <li class="menu-item">
                         <a href="https://www.ihu.gr/">
-                            International Hellenic Univercity
+                            International Hellenic University
                         </a>
                     </li>
                     <li class="menu-item">
