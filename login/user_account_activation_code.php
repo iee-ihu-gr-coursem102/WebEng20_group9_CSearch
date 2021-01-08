@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 
 /* Import PHPMailer classes into the global namespace
@@ -109,7 +109,7 @@ function user_wants_to_sign_in($cxn, $email, $hash) {
  * @return type
  */
 function activate_user($cxn, $email) {
-    $sql_query = "UPDATE `users` SET `active`=1 WHERE `email`='$email';";
+    $sql_query = "UPDATE `users` SET `active`=1, `hash`='' WHERE `email`='$email';";
     //        echo $sql_query . "<br>";
     if ($cxn->query($sql_query)) {
         return  1;

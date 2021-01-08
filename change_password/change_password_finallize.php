@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 
 /* Import PHPMailer classes into the global namespace
@@ -48,8 +48,8 @@ if (!empty($_GET["a1"]) && !empty($_GET["a2"])) {
         $cxn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
         /* Παίρνω τις τιμές από το GET */
-        $email = mysqli_real_escape_string($cxn, $_GET["a1"]);
-        $hash = mysqli_real_escape_string($cxn, $_GET["a2"]);
+        $email = trim(mysqli_real_escape_string($cxn, $_GET["a1"]));
+        $hash = trim(mysqli_real_escape_string($cxn, $_GET["a2"]));
 
         /* Ελέγχω αν ο χρήστης έχει ζητήσει αλλαγή - το temp_passwd δεν είναι κενό */
         $check = user_wants_to_change_pass($cxn, $email, $hash);
@@ -113,7 +113,7 @@ function user_wants_to_change_pass($cxn, $email, $hash) {
  */
 function change_password($cxn, $email) {
     /* Ενημερώνω το password kai διαγράφω το temp_password */
-    $sql_query = "UPDATE `users` SET `Passwd`=`temp_passwd`, `temp_passwd`='' WHERE `email`='$email';";
+    $sql_query = "UPDATE `users` SET `Passwd`=`temp_passwd`, `temp_passwd`='',`hash`='' WHERE `email`='$email';";
     //        echo $sql_query . "<br>";
     if ($cxn->query($sql_query)) {
         return 1;

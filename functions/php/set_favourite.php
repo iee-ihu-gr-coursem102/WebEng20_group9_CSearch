@@ -1,13 +1,12 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 
-$main_page = $_SESSION['root_url'];
 /* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
 if (session_status() == 2 && count($_SESSION) == 0) {
-    header("location:$main_page");
+    header("location:../../index.php");
 }
 
 //Προσθέτω μερικές βιβλιοθήκες

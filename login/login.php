@@ -1,24 +1,24 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 
-$main_page = $_SESSION['root_url'];
 /* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
 if (session_status() == 2 && count($_SESSION) == 0) {
-    header("location:$main_page");
+//    header("location:../index.php");
+    echo "home_page";
+} else {
+
+    if (isset($_POST['email']) && isset($_POST['password'])) {
+        include_once ($_SESSION ['base_path'] . "/functions/php/functions.php");
+        check_user_registration();
+    }
 }
 
-if (isset($_POST['email']) && isset($_POST['password'])) {
-//    $email = $_POST['email'];
-//    $password = $_POST['password'];
-    include_once ($_SESSION ['base_path'] . "/functions/php/functions.php");
-//    check_user_registration($email, $password);
-    check_user_registration();
-}
-
-//function check_user_registration($email, $password) {
+/**
+ * Ελέγχει αν ο χρήστης έχει ενεργοποιηθεί
+ */
 function check_user_registration() {
     //Ελέγχω αν τα στοιχεία αυτά είναι καταχωρημένα 
     try {
@@ -36,7 +36,6 @@ function check_user_registration() {
                 . " WHERE `email`='$email' and  `Passwd`='" . $encrypted_password . "' ;";
 //        echo $sql_query . "<br>";
         get_data_from_query_ASSOC($cxn, $user_data, $sql_query);
-//        print_r($user_data);
         mysqli_close($cxn);
 
         /* Αν υπάρχει ο χρήστης πρέπει επιστρέψει πίσω κωδικό λάθους */

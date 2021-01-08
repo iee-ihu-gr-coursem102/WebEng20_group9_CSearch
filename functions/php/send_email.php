@@ -48,7 +48,7 @@ function send_email($mail_address, $message, $subject, $mail) {
         }
     } catch (Exception $exc) {
 
-        echo $exc->getTraceAsString();
+//        echo $exc->getTraceAsString();
         echo "Please try once more";
     }
 }

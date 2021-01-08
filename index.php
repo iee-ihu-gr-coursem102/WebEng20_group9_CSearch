@@ -1,7 +1,8 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
+
 
 /* Αποθηκεύω σε μεταβλητή SESSION το path για τη ρίζα */
 $_SESSION['base_path'] = __DIR__;

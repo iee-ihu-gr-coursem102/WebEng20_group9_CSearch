@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 /* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
 if (session_status() == 2 && count($_SESSION) == 0) {

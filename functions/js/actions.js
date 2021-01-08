@@ -130,12 +130,15 @@ jQuery(function ($) {
         $('#my_modal').modal({backdrop: 'static', keyboard: false})
         action = 'change_password';
 
-//        window.location.replace('change_password/reset_pass.php')
     });
 
 
     /**
      * Ενέργειες που εκτελούνται όταν κάνω κλικ στο κουμπί του modal
+     * Οι περιπτώσεις που χειρίζεται ειναι:
+     * login
+     * sign_up
+     * change_password
      * */
     $('#modal_button').on('click', function () {
         email = $('#email').val().toLowerCase()
@@ -298,6 +301,7 @@ jQuery(function ($) {
     });
 
 
+
     /**
      * Χειρίζεται το αποτέλεσμα της κλήσης login
      * @param {type} return_message: το επιστρεφόμενο μήνυμα
@@ -315,6 +319,11 @@ jQuery(function ($) {
 
             $(location).attr('href', 'index.php')
 
+        } else if (return_message.substring(0, 5) == 'home_page') {
+            $('#alert_modal_modal').text("Something wrong happened please try again");
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+            window.location.href = "index.php";
+
         } else {
             $('#alert_modal_modal').text(return_message);
             $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
@@ -328,18 +337,38 @@ jQuery(function ($) {
      * @param {type} message: το επιστρεφόμενο μήνυμα
      * @returns {undefined}
      */
-    function signup_handle(message) {
-        $('#alert_modal_modal').text(message);
-        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+    function signup_handle(return_message) {
+        if (return_message.substring(0, 5) == 'home_page') {
+            $('#alert_modal_modal').text("Something wrong happened please try again");
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+            window.location.href = "index.php";
+
+        } else {
+            $('#alert_modal_modal').text(return_message);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+        }
+
     }
 
 
-
+    /**
+     * Χειρίζεται το αποτέλεσμα της κλήσης signup
+     * @param {type} message: το επιστρεφόμενο μήνυμα
+     * @returns {undefined}
+     */
     function  change_password_handle(return_message) {
-        console.log(return_message)
         $("#my_modal").hide()
-        $('#alert_modal_modal').text(return_message);
-        $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+        
+        if (return_message.substring(0, 5) == 'home_page') {
+            $('#alert_modal_modal').text("Something wrong happened please try again");
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+            window.location.href = "index.php";
+
+        } else {
+            $('#alert_modal_modal').text(return_message);
+            $("#alert_modal").modal({"backdrop": "static", "keyboard": true, "show": true});
+        }
+        
     }
 
 

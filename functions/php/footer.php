@@ -12,9 +12,8 @@
             <div class="col-md-4 page-footer-group text-center">
                 <p class="page-footer-header header-3">Information</p>
                 <ul class="page-footer-menu menu">
-                    <li class="menu-item">
-                        This web application draws on data provided by the
-                        
+                    <li class="menu-item">This web application draws on data provided by the</li>
+                    <li class="menu-item">                       
                         <a href="https://www.songkick.com/developer" class="footer_link">
                         <img src="img/by-songkick-black.png" class="img-fluid"
                              style="max-width: 35%;height: auto;"

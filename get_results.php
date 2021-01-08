@@ -1,20 +1,15 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
-$main_page = $_SESSION['root_url'];
 /* Αν δεν έχει ανοίξει το συγκεκριμένο SESSION με τον browser του, τότε τον πηγαίνει στην αρχική σελίδα */
 if (session_status() == 2 && count($_SESSION) == 0) {
-    header("location:$main_page");
+    header("location:index.php");
 }
 
 include_once ($_SESSION ['base_path'] . "/functions/php/functions.php");
 $api_key = $_SESSION['api_key'];
-//$email = $_SESSION['email'];
-//$page = 1;
-//$per_page = 10;
-
 $city_id = $_POST['city_id'];
 $per_page=$_POST['results_per_page'];
 $page=$_POST['page_number'];
@@ -86,8 +81,6 @@ for ($i = 0; $i < $returned_events; $i++) {
     $event_type = $json_data["resultsPage"]["results"]["event"][$i]["type"];
     $event_status = mb_strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]);
 
-    $event_popularity = $json_data["resultsPage"]["results"]["event"][$i]["popularity"];
-    $event_popularity = round((float) $event_popularity * 100, 3) . '%';
 
     /*Αν είναι συνδεδεμένος τότε ενημερώνω τα επιστρεφόμενα αποτελέσματα με τις προτιμήσεις του*/
     if ($_SESSION['login'] == 1) {
@@ -108,20 +101,11 @@ for ($i = 0; $i < $returned_events; $i++) {
         "event_uri" => $json_data["resultsPage"]["results"]["event"][$i] ["venue"]["uri"],
         "event_type" => $json_data["resultsPage"]["results"]["event"][$i]["type"],
         "event_status" => mb_strtoupper($json_data["resultsPage"]["results"]["event"][$i]["status"]),
-        "event_popularity" => $event_popularity,
         "favorite" => $favorite
             )
     );
     
 }
-
-/*Δημιουργώ το τελικό προς επιστροφή αντικείμενο*/
-//$events = array(
-//    "city_id" => $city_id,
-//    "returned_events" => $returned_events,
-//    "totalEntries" => $total_events,
-//    "page" => $event_page,
-//    "event_list" => $row);
 
 
 $events = array(
